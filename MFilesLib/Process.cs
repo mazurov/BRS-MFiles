@@ -14,7 +14,7 @@ namespace MFilesLib
     {
         private static MFilesServerApplication _mfilesServer;
 
-        private static void ProcessData(string vaultName, Vault vault, IView view, DateTime startDate)
+        private static void ProcessData(string vaultName, Vault vault, IView view, DateTime startDate, IProcessor processor)
         {
             Trace.TraceInformation($"Hello from {vaultName}");
 
@@ -56,14 +56,14 @@ namespace MFilesLib
 
                 foreach (ObjectVersion objVer in objects)
                 {
-                    Trace.TraceInformation($"Result {objVer.Title} from {vaultName}");
+                    processor.ProcessObject(objVer, vaultName, vault);
                 }
                 //internalDocuments.AddRange(from ObjectVersion obj in objects
                 //                            select new MFilesInternalDocument(internalVault, obj));
             }
         }
 
-        public static void Run(string serverName, string userName, string password, string[] vaultNames, string viewName, DateTime startDate)
+        public static void Run(string serverName, string userName, string password, string[] vaultNames, string viewName, DateTime startDate, IProcessor processor)
         {
             _mfilesServer = new MFilesServerApplication();
             MFServerConnection result;
@@ -120,7 +120,7 @@ namespace MFilesLib
             IList<Task> tasks = new List<Task>();
             foreach (var taskData in data)
             {
-                var task = new Task(() => ProcessData(taskData.Item1, taskData.Item2, taskData.Item3, startDate));
+                var task = new Task(() => ProcessData(taskData.Item1, taskData.Item2, taskData.Item3, startDate, processor));
                 tasks.Add(task);
                 task.Start();
             }
