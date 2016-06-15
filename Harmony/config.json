@@ -1,10 +1,15 @@
 ﻿{
   "AppVersion": "1.0",
-  "Views": ["DefaultView"], 
+  "View": "Web service",
+  "StartDate":  "2016-06-01", 
   "Vaults": [
     {
-      "Name": "Vault1"
+      "Name": "Basel"
+    },
+    {
+      "Name": "Rotterdam"
     }
+
   ] 
 }
 

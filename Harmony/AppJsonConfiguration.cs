@@ -26,6 +26,8 @@ namespace Harmony
         /// Gets the integer values
         /// </summary>
         public List<VaultDetails> Vaults { get; set; }
-        
+
+        public string View { get; set; }
+        public DateTime StartDate { get; set; }
     }
 }

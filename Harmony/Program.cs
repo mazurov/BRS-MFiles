@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Harmony
 {
@@ -7,13 +9,13 @@ namespace Harmony
         static void Main(string[] args)
         {
             var config = new AppJsonConfiguration();
-  
-            Console.Out.WriteLine(config.AppVersion);
-            foreach (var vault in config.Vaults)
-            {
-                Console.Out.WriteLine(vault.Name);
-            }
+            var secret = new PrivateJsonConfiguration();
 
+
+            Console.Out.WriteLine(config.AppVersion);
+            MFilesLib.ProcessVaults.Run(secret.MFiles.ServerName, secret.MFiles.UserName, secret.MFiles.Password,
+                config.Vaults.Select(v => v.Name).ToArray(), config.View, config.StartDate);
+            Trace.TraceInformation("Finished");
             Console.ReadKey();
         }
     }
