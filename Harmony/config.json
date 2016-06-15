@@ -1,0 +1,10 @@
+﻿{
+  "AppVersion": "1.0",
+  "Views": ["DefaultView"], 
+  "Vaults": [
+    {
+      "Name": "Vault1"
+    }
+  ] 
+}
+
