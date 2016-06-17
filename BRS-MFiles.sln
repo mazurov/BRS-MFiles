@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harmony", "Harmony\Harmony.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MFilesLib", "MFilesLib\MFilesLib.csproj", "{64C4DAAE-5E6B-42F5-8C93-E0AC36FF8190}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documents", "Documents\Documents.csproj", "{B44AEC86-15ED-4F02-8D87-1D5F9960F07B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbHarmony", "..\..\..\Visual Studio 2013\Projects\BrsMFiles\DbHarmony\DbHarmony.csproj", "{AAC2D94E-E5AB-4B11-B285-B0E5704E7F47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarmonyApp", "..\..\..\Visual Studio 2013\Projects\BrsMFiles\HarmonyApp\HarmonyApp.csproj", "{D6C37B8B-F9C3-45F6-A028-94CA88431FE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +27,14 @@ Global
 		{64C4DAAE-5E6B-42F5-8C93-E0AC36FF8190}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64C4DAAE-5E6B-42F5-8C93-E0AC36FF8190}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64C4DAAE-5E6B-42F5-8C93-E0AC36FF8190}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B44AEC86-15ED-4F02-8D87-1D5F9960F07B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B44AEC86-15ED-4F02-8D87-1D5F9960F07B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B44AEC86-15ED-4F02-8D87-1D5F9960F07B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B44AEC86-15ED-4F02-8D87-1D5F9960F07B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAC2D94E-E5AB-4B11-B285-B0E5704E7F47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAC2D94E-E5AB-4B11-B285-B0E5704E7F47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6C37B8B-F9C3-45F6-A028-94CA88431FE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6C37B8B-F9C3-45F6-A028-94CA88431FE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

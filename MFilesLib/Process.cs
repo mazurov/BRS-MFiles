@@ -7,14 +7,17 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Transactions;
 using MFilesAPI;
+
 namespace MFilesLib
 {
     public static class ProcessVaults
     {
         private static MFilesServerApplication _mfilesServer;
 
-        private static void ProcessData(string vaultName, Vault vault, IView view, DateTime startDate, IProcessor processor)
+        private static void ProcessData(string vaultName, Vault vault, IView view, DateTime startDate,
+            IProcessor processor)
         {
             Trace.TraceInformation($"Hello from {vaultName}");
 
@@ -26,7 +29,7 @@ namespace MFilesLib
             var expression = new Expression();
             var value = new TypedValue();
 
-            expression.SetPropertyValueExpression((int)MFBuiltInPropertyDef.MFBuiltInPropertyDefLastModified,
+            expression.SetPropertyValueExpression((int) MFBuiltInPropertyDef.MFBuiltInPropertyDefLastModified,
                 MFParentChildBehavior.MFParentChildBehaviorNone, dfDate);
             search.Set(expression, MFConditionType.MFConditionTypeGreaterThanOrEqual, value);
 
@@ -35,7 +38,7 @@ namespace MFilesLib
             search = new SearchCondition();
             expression = new Expression();
             value = new TypedValue();
-            expression.SetPropertyValueExpression((int)MFBuiltInPropertyDef.MFBuiltInPropertyDefLastModified,
+            expression.SetPropertyValueExpression((int) MFBuiltInPropertyDef.MFBuiltInPropertyDefLastModified,
                 MFParentChildBehavior.MFParentChildBehaviorNone, dfDate);
             search.Set(expression, MFConditionType.MFConditionTypeLessThan, value);
 
@@ -44,6 +47,7 @@ namespace MFilesLib
 
             var currentDateTime = startDate;
 
+            var processorContext = processor.CreateContext();
             while (currentDateTime < DateTime.Now)
             {
                 conditions[conditions.Count - 1].TypedValue.SetValue(MFDataType.MFDatatypeDate, currentDateTime);
@@ -56,14 +60,15 @@ namespace MFilesLib
 
                 foreach (ObjectVersion objVer in objects)
                 {
-                    processor.ProcessObject(objVer, vaultName, vault);
+                    processorContext.ProcessObject(new ObjectVersionWrapper(objVer, vault, vaultName));
                 }
                 //internalDocuments.AddRange(from ObjectVersion obj in objects
                 //                            select new MFilesInternalDocument(internalVault, obj));
             }
         }
 
-        public static void Run(string serverName, string userName, string password, string[] vaultNames, string viewName, DateTime startDate, IProcessor processor)
+        public static void Run(string serverName, string userName, string password, string[] vaultNames, string viewName,
+            DateTime startDate, IProcessor processor)
         {
             _mfilesServer = new MFilesServerApplication();
             MFServerConnection result;
@@ -86,7 +91,7 @@ namespace MFilesLib
             Trace.TraceInformation($"Hello from Run {serverName}");
 
             VaultsOnServer vaultsOnServer = _mfilesServer.GetVaults();
-           
+
             IList<Tuple<string, Vault, IView>> data = new List<Tuple<string, Vault, IView>>();
             foreach (string vaultName in vaultNames)
             {
@@ -100,7 +105,7 @@ namespace MFilesLib
                     Trace.TraceError($"Could not find vault '{vaultName}'");
                     continue;
                 }
- 
+
                 Vault vault = vaultOnServer.LogIn();
                 if (!vault.LoggedIn)
                 {
@@ -118,9 +123,11 @@ namespace MFilesLib
             }
 
             IList<Task> tasks = new List<Task>();
+
             foreach (var taskData in data)
             {
-                var task = new Task(() => ProcessData(taskData.Item1, taskData.Item2, taskData.Item3, startDate, processor));
+                var task =
+                    new Task(() => ProcessData(taskData.Item1, taskData.Item2, taskData.Item3, startDate, processor));
                 tasks.Add(task);
                 task.Start();
             }
@@ -129,9 +136,6 @@ namespace MFilesLib
             {
                 task.Wait();
             }
-
- 
-
         }
     }
 }

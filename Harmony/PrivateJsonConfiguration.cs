@@ -22,5 +22,6 @@ namespace Harmony
         }
 
         public MFilesDetails MFiles { get; set; }
+        public string ConnectionString { get; set; }
     }
 }

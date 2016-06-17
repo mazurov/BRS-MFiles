@@ -29,5 +29,6 @@ namespace Harmony
 
         public string View { get; set; }
         public DateTime StartDate { get; set; }
+
     }
 }
