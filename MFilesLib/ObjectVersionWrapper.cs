@@ -51,9 +51,11 @@ namespace MFilesLib
         }
 
         public Guid Guid => Guid.Parse(_objVer.ObjectGUID);
-        public string Title => _objVer.Title;
         public string VaultName { get; }
         public string UnNumber => GetStringValue(VaultWrapper.UnNumberKey);
+        public string Name => GetStringValue(VaultWrapper.NameKey);
+        public string Title => GetStringValue(VaultWrapper.TitleKey);
+        public string Description => GetStringValue(VaultWrapper.DescriptionKeys);
 
         private PropertyValue GetPropertyValue(string key)
         {

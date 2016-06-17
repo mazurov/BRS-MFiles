@@ -40,7 +40,7 @@ namespace Harmony
 
         public void ProcessObject(ObjectVersionWrapper obj)
         {
-            Trace.TraceInformation($"Result {obj.Title} from {obj.VaultName} {obj.UnNumber}");
+            Trace.TraceInformation($"Result {obj.Title} from {obj.VaultName}\n{obj.UnNumber} {obj.Description}");
 
             var dbDocument = _ctx.MFilesDocuments.FirstOrDefault(d => d.Guid == obj.Guid);
 

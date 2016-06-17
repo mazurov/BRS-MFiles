@@ -24,10 +24,15 @@ namespace Harmony
             var config = new AppJsonConfiguration();
             var secret = new PrivateJsonConfiguration();
 
+            var listener = new ConsoleTraceListener()
+            {
+                //TraceOutputOptions = TraceOptions.ThreadId
+            };
+            Trace.Listeners.Add(listener);
 
             Trace.TraceInformation($"Harmony version {config.AppVersion}");
             ProcessVaults.Run(secret.MFiles.ServerName, secret.MFiles.UserName, secret.MFiles.Password,
                 config.Vaults.Select(v => v.Name).ToArray(), config.View, config.StartDate, new MainProcessor(secret.ConnectionString));
         }
     }
-}
+} 

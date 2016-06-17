@@ -19,6 +19,7 @@ namespace MFilesLib
         private static void ProcessData(string vaultName, Vault vault, IView view, DateTime startDate,
             IProcessor processor)
         {
+            Thread.CurrentThread.Name = $"Thread-{vaultName}";
             Trace.TraceInformation($"Hello from {vaultName}");
 
             var conditions = view.SearchConditions;
