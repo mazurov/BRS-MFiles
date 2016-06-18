@@ -32,7 +32,8 @@ namespace Harmony
 
             Trace.TraceInformation($"Harmony version {config.AppVersion}");
             ProcessVaults.Run(secret.MFiles.ServerName, secret.MFiles.UserName, secret.MFiles.Password,
-                config.Vaults.Select(v => v.Name).ToArray(), config.View, config.StartDate, new MainProcessor(secret.ConnectionString));
+                config.Vaults.Select(v => v.Name).ToArray(), config.View, config.StartDate, 
+                new MainProcessor(secret.ConnectionString, config.Vaults.ToDictionary(cfg => cfg.Name, cfg => cfg.NameInDb)));
         }
     }
 } 

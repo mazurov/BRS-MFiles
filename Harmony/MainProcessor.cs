@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
@@ -14,9 +15,10 @@ namespace Harmony
     class MainProcessorContext : IProcessorContext
     {
         private DocumentsContext _ctx;
-        public MainProcessorContext(string connectionString)
+        private MainProcessor _parent;
+        public MainProcessorContext(MainProcessor parent)
         {
-            _ctx = new DocumentsContext(connectionString);
+            _ctx = new DocumentsContext(parent.ConnectionString);
             try
             {
                 _ctx.Database.CreateIfNotExists();
@@ -42,7 +44,30 @@ namespace Harmony
         {
             Trace.TraceInformation($"Result {obj.Title} from {obj.VaultName}\n{obj.UnNumber} {obj.Description}");
 
-            var dbDocument = _ctx.MFilesDocuments.FirstOrDefault(d => d.Guid == obj.Guid);
+            var doc = Logic.FindDocument(_ctx, obj.Guid);
+            var master = Logic.FindMaster(_ctx,  obj.UnNumber ?? obj.Name );
+            var masterByGuid = Logic.FindMasterById(_ctx, obj.Guid);
+
+            if (doc != null && (master == null || master.Guid != masterByGuid.Guid)) // Changed UnNumber
+            {
+                Logic.Delete(_ctx, doc);
+                doc = null;
+            }
+
+            // Special case for Basel convention
+            if (master != null && (obj.VaultName != "basel" && master.Convention == "basel"))
+            {
+                Logic.Delete(_ctx, doc);
+                return;
+            }
+
+            if (doc == null)
+            {
+                if (master == null)
+                {
+                    Logic.CreateMaster(_ctx, obj, _parent.VaultToConventionMap);
+                }
+            }
 
             //Trace.TraceInformation($"UnNumber={obj.UnNumber}");
             //var unNumber = string.IsNullOrEmpty(doc.UnNumber) ? doc.Name : doc.UnNumber;
@@ -52,16 +77,21 @@ namespace Harmony
 
     internal class MainProcessor : IProcessor
     {
-        private readonly string _connectionString;
 
-        public MainProcessor(string connectionString)
+
+        public MainProcessor(string connectionString, IDictionary<string, string> vaultToConventionMap)
         {
-            _connectionString = connectionString;
+            ConnectionString = connectionString;
+            VaultToConventionMap = vaultToConventionMap;
         }
+
+        public IDictionary<string, string> VaultToConventionMap { get; set; }
+
+        public string ConnectionString { get; set; }
 
         public IProcessorContext CreateContext()
         {
-            return new MainProcessorContext(_connectionString);
+            return new MainProcessorContext(this);
         }
 
 

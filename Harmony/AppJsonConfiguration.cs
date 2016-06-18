@@ -10,6 +10,8 @@ namespace Harmony
     public class VaultDetails
     {
         public string Name { get; set; }
+        public string NameInDb { get; set; }
+        public bool Enabled { get; set; }
     }
     public class AppJsonConfiguration : JsonConfiguration
     {

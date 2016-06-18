@@ -48,10 +48,8 @@ namespace Documents
         public virtual Title Title { get; set; }
         public virtual Description Description { get; set; }
 
-        public string GetRepositoryName()
-        {
-            return Document?.Convention;
-        }
+        [NotMapped]
+        public string Convention => Document?.Convention;
     }
 
     public class Document

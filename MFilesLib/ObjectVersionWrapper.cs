@@ -56,6 +56,16 @@ namespace MFilesLib
         public string Name => GetStringValue(VaultWrapper.NameKey);
         public string Title => GetStringValue(VaultWrapper.TitleKey);
         public string Description => GetStringValue(VaultWrapper.DescriptionKeys);
+        public DateTime ModifiedDate => _objVer.LastModifiedUtc;
+        public DateTime CreatedDate => _objVer.CreatedUtc;
+        
+        public string Language => GetStringValue(VaultWrapper.LanguageKey);
+        public string Player => GetStringValue(VaultWrapper.PlayerKey);
+        public string Author => GetStringValue(VaultWrapper.AuthorKeys);
+
+
+
+        
 
         private PropertyValue GetPropertyValue(string key)
         {

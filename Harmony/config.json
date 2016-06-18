@@ -1,13 +1,22 @@
 ﻿{
   "AppVersion": "1.0",
   "View": "Web service",
-  "StartDate":  "2016-06-01", 
+  "StartDate":  "2016-06-01",
   "Vaults": [
     {
       "Name": "Basel"
     },
     {
       "Name": "Rotterdam"
+    },
+    {
+      "Name": "Stockholm Production",
+      "NameInDb": "stockholm"
+    },
+    {
+      "Name": "Intranet",
+      "NameInDb": "brs",
+      "Enabled":  false 
     }
 
   ] 
