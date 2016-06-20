@@ -15,6 +15,10 @@ namespace Documents
         {
         }
 
+        public DocumentsContext() : base("DocumentsContext")
+        {
+        }
+
         public DbSet<Document> Documents { get; set; }
         public DbSet<ListProperty> Values { get; set; }
         public DbSet<Title> Titles { get; set; }

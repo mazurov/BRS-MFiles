@@ -27,7 +27,7 @@ namespace Harmony
             return file?.Document.MFilesDocument;
         }
 
-        public string GetAuthor(ObjectVersionWrapper obj)
+        public static string GetAuthor(ObjectVersionWrapper obj)
         {
            
                 var author = string.IsNullOrWhiteSpace(obj.Author) ? null : obj.Author;
@@ -61,7 +61,7 @@ namespace Harmony
             masterDoc.MFilesDocument = targetDoc;
             masterDoc.UnNumber = sourceDoc.UnNumber??sourceDoc.Name;    
             masterDoc.Convention = vaultToConventionMap.ContainsKey(sourceDoc.VaultName)? vaultToConventionMap[sourceDoc.VaultName]: sourceDoc.VaultName.ToLower();
-            masterDoc.Author = sourceDoc.Author;
+            masterDoc.Author = GetAuthor(sourceDoc);
             masterDoc.CountryFull = sourceDoc.Country;
             masterDoc.Country = _countries.GetCountryIsoCode2(masterDoc.CountryFull);
             masterDoc.Copyright = sourceDoc.Copyright;

@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppJsonConfiguration.cs" />
+    <Compile Include="Logic.cs" />
     <Compile Include="MainProcessor.cs" />
     <Compile Include="PrivateJsonConfiguration.cs" />
     <Compile Include="Program.cs" />
