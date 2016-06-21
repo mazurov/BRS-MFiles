@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B44AEC86-15ED-4F02-8D87-1D5F9960F07B}</ProjectGuid>
+    <ProjectGuid>{9EC7EF0E-14D9-4966-9FAF-139D87D4EC3F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Documents</RootNamespace>
-    <AssemblyName>Documents</AssemblyName>
+    <RootNamespace>MeaDocuments</RootNamespace>
+    <AssemblyName>MeaDocuments</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
