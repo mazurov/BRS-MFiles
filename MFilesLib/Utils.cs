@@ -25,9 +25,8 @@ namespace MFilesLib
 
     public class CultureUtils
     {
-        private static IEnumerable<RegionInfo> _regionsInfo;
         private static IEnumerable<CultureInfo> _culturesInfo;
-        private static ICountries _countriesSource = null;
+        //private static ICountries _countriesSource = null;
 
         private static Dictionary<string, int> _months = new Dictionary<string, int>()
         {
@@ -45,10 +44,10 @@ namespace MFilesLib
             {"December", 12}
         };
 
-        public static void SetCountriesSource(ICountries countries)
+        /*public static void SetCountriesSource(ICountries countries)
         {
             _countriesSource = countries;
-        }
+        }*/
 
         public static string GetLangTwoLetterCode(string name)
         {
@@ -63,11 +62,11 @@ namespace MFilesLib
             }
 
             CultureInfo culture = _culturesInfo.FirstOrDefault(c => c.EnglishName == name);
-            return culture != null ? culture.TwoLetterISOLanguageName : null;
+            return culture?.TwoLetterISOLanguageName;
 
         }
 
-        public static string GetCountryTwoLetterCode(string name)
+        /*public static string GetCountryTwoLetterCode(string name)
         {
             if (String.IsNullOrEmpty(name))
             {
@@ -88,7 +87,7 @@ namespace MFilesLib
 
 
             return _countriesSource != null ? _countriesSource.GetCountryIsoCode2(name) : null;
-        }
+        }*/
 
 
     }

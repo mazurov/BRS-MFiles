@@ -11,6 +11,7 @@ namespace Harmony
     {
         public string Name { get; set; }
         public string NameInDb { get; set; }
+        public string Url { get; set; }
         public bool Enabled { get; set; }
     }
     public class AppJsonConfiguration : JsonConfiguration
@@ -31,6 +32,9 @@ namespace Harmony
 
         public string View { get; set; }
         public DateTime StartDate { get; set; }
+        public string TreatiesServiceUrl { get; set; }
+        public string ThumbnailsUrlPattern { get; set; }
+        public bool DeleteNotProcessed { get; set; }
 
     }
 }

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TreatiesService.Service;
+using TreatiesService.Treaties;
 
 namespace TreatiesService
 {
@@ -26,15 +23,15 @@ namespace TreatiesService
                     _isoCodes2 = new Dictionary<string, string>();
                     foreach (var country in _ctx.countryNames)
                     {
-                        if (!String.IsNullOrEmpty(country.NameEn) && !_isoCodes2.ContainsKey(country.NameEn.ToLower()))
+                        if (!string.IsNullOrEmpty(country.NameEn) && !_isoCodes2.ContainsKey(country.NameEn.ToLower()))
                         {
                             _isoCodes2.Add(country.NameEn.ToLower(), country.IsoCode2d);
                         }
-                        if (!String.IsNullOrEmpty(country.NameFr) && !_isoCodes2.ContainsKey(country.NameFr.ToLower()))
+                        if (!string.IsNullOrEmpty(country.NameFr) && !_isoCodes2.ContainsKey(country.NameFr.ToLower()))
                         {
                             _isoCodes2.Add(country.NameFr.ToLower(), country.IsoCode2d);
                         }
-                        if (!String.IsNullOrEmpty(country.NameEs) && !_isoCodes2.ContainsKey(country.NameEs.ToLower()))
+                        if (!string.IsNullOrEmpty(country.NameEs) && !_isoCodes2.ContainsKey(country.NameEs.ToLower()))
                         {
                             _isoCodes2.Add(country.NameEs.ToLower(), country.IsoCode2d);
                         }

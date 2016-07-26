@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,15 +41,22 @@ namespace MFilesLib
         private readonly ObjectVersion _objVer;
         private readonly VaultWrapper _vault;
         private readonly Dictionary<string, PropertyValue> _propertieValues;
+        private ObjectFileWrapper _file;
 
         public ObjectVersionWrapper(ObjectVersion obj, Vault vault, string vaultName)
         {
             _objVer = obj;
             _vault = new VaultWrapper(vaultName, vault);
             VaultName = vaultName;
-
             _propertieValues = new Dictionary<string, PropertyValue>();
+            
+
         }
+
+        public ObjectFileWrapper File => _file ??
+                                         (_file =
+                                             new ObjectFileWrapper(_vault.Vault.ObjectFileOperations.GetFiles(_objVer.ObjVer)[1],
+                                                 VaultName == "Intranet" ? SourceUrl : null));
 
         public Guid Guid => Guid.Parse(_objVer.ObjectGUID);
         public string VaultName { get; }
@@ -62,10 +70,142 @@ namespace MFilesLib
         public string Language => GetStringValue(VaultWrapper.LanguageKey);
         public string Player => GetStringValue(VaultWrapper.PlayerKey);
         public string Author => GetStringValue(VaultWrapper.AuthorKeys);
+        public string Copyright => GetStringValue(VaultWrapper.CopyrightKey);
+        public string Country => GetStringValue(VaultWrapper.PlayerKey);
 
 
 
-        
+
+        public IList<ListProperty> Types => GetListValues(VaultWrapper.DocTypeKeys);
+        public IList<ListProperty> Chemicals => GetListValues(VaultWrapper.ChemicalKeys);
+        public IList<ListProperty> Programs => GetListValues(VaultWrapper.ProgramKeys);
+        public IList<ListProperty> Terms => GetListValues(VaultWrapper.TermKeys);
+        public IList<ListProperty> Tags => GetListValues(VaultWrapper.TagsKeys);
+        public IList<ListProperty> Meetings => GetListValues(VaultWrapper.MeetingKeys);
+        public IList<ListProperty> MeetingsTypes => GetListValues(VaultWrapper.MeetingTypeKeys);
+
+        public string SourceUrl
+        {
+            get
+            {
+                var val = GetStringValue(VaultWrapper.SourceKey);
+                if (!string.IsNullOrWhiteSpace(val))
+                {
+                    val = val.Trim();
+                    if (Uri.IsWellFormedUriString(val, UriKind.Absolute))
+                    {
+                        return val;
+                    }
+                }
+                return null;
+            }
+        }
+
+        public Tuple<DateTime, DateTime> GetPeriod()
+        {
+            var periods = GetStringValues(VaultWrapper.PeriodBienniumKey);
+
+            var iperiods = new List<int>();
+            foreach (var period in periods)
+            {
+                var startAndEnd = period.Split('-');
+                foreach (var p in startAndEnd)
+                {
+                    var year = 0;
+                    if (int.TryParse(p, out year))
+                    {
+                        iperiods.Add(year);
+                    }
+                }
+            }
+
+            DateTime? periodStartDate = null;
+            DateTime? periodEndDate = null;
+            if (iperiods.Count > 0)
+            {
+                periodStartDate = new DateTime(iperiods[0], 1, 1);
+            }
+
+            if (iperiods.Count > 1)
+            {
+                periodEndDate = new DateTime(iperiods[iperiods.Count - 1], 1, 1);
+            }
+
+            if (periodStartDate != null && periodEndDate != null)
+            {
+                return new Tuple<DateTime, DateTime>(periodStartDate.Value, periodEndDate.Value);
+            }
+            return null;
+        }
+
+
+        public DateTime PublicationDate
+        {
+            get
+            {
+
+                var d = GetDateTimeValue(VaultWrapper.TransmissionDateKey);
+                if (d.HasValue)
+                {
+                    return d.Value;
+                }
+
+                d = GetDateTimeValue(VaultWrapper.DateIssuanceKey);
+                if (d.HasValue)
+                {
+                    return d.Value;
+                }
+
+                d = GetDateTimeValue(VaultWrapper.DateIssuanceSignatureKey);
+                if (d.HasValue)
+                {
+                    return d.Value;
+                }
+                d = GetDateTimeValue(VaultWrapper.DateOfCorrespondesKey);
+                if (d.HasValue)
+                {
+                    return d.Value;
+                }
+
+                d = GetDateTimeValue(VaultWrapper.DateStartKey);
+                if (d.HasValue)
+                {
+                    return d.Value;
+                }
+
+                var sd = GetStringValue(VaultWrapper.PublicationDateDisplayKey);
+                try
+                {
+                    var sdDate = DateTime.ParseExact(sd, "MMMM yyyy", CultureInfo.CurrentCulture);
+                    return sdDate;
+                }
+                catch (FormatException)
+                {
+
+                }
+
+                var pubMonth = GetStringValue(VaultWrapper.PublicationDateMonthKey);
+                var pubYear = GetStringValue(VaultWrapper.PublicationDateYearKey);
+
+                if (!(string.IsNullOrWhiteSpace(pubMonth) || string.IsNullOrWhiteSpace(pubYear)))
+                {
+                    try
+                    {
+                        var sdDate = DateTime.ParseExact(pubMonth + " " + pubYear, "MMMM yyyy", CultureInfo.CurrentCulture);
+                        return sdDate;
+                    }
+                    catch (FormatException)
+                    {
+
+                    }
+                }
+
+                return CreatedDate;
+            }
+        }
+
+
+
 
         private PropertyValue GetPropertyValue(string key)
         {
@@ -141,7 +281,7 @@ namespace MFilesLib
             return "";
         }
 
-        private IList<string> GetStringValues(string key)
+        private IEnumerable<string> GetStringValues(string key)
         {
             return GetListValues(key).Select(v => v.Value).ToList();
         }
@@ -159,21 +299,13 @@ namespace MFilesLib
         private TypedValue GetTypedValue(string key)
         {
             PropertyValue propertyValue = GetPropertyValue(key);
-            if (null != propertyValue)
-            {
-                return propertyValue.TypedValue;
-            }
-            return null;
+            return propertyValue?.TypedValue;
         }
 
         public int? GetIntegerValue(string key)
         {
             TypedValue typedValue = GetTypedValue(key);
-            if (null != typedValue)
-            {
-                return typedValue.Value;
-            }
-            return null;
+            return typedValue?.Value;
         }
 
         public DateTime? GetDateTimeValue(string key)

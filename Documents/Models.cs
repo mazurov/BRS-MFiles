@@ -79,19 +79,23 @@ namespace Documents
         [Required]
         [StringLength(255)]
         [DefaultValue("")]
-        public String Convention { get; set; }
+        public string Convention { get; set; }
 
         [Required]
         [StringLength(255)]
         [Index(IsUnique = true)]
-        public String UnNumber { get; set; }
+        public string UnNumber { get; set; }
 
         [DefaultValue("")]
-        public String Copyright { get; set; }
+        public string Copyright { get; set; }
 
         [DefaultValue("")]
-        public String Author { get; set; }
+        public string Author { get; set; }
 
+        [DefaultValue(false)]
+        public bool IsCorporateAuthor { get; set; }
+
+ 
         [StringLength(3)]
         [DefaultValue("")]
         public String Country { get; set; }
@@ -161,8 +165,13 @@ namespace Documents
         [Required]
         public long Size { get; set; }
 
+        [Required]
+        [StringLength(1024)]
+        public string ThumbnailUrl { get; set; }
+
         public virtual MFilesDocument MFilesDocument { get; set; }
     }
+  
 
     public abstract class ListProperty
     {
@@ -172,6 +181,8 @@ namespace Documents
         [Required(AllowEmptyStrings = true)]
         [DefaultValue("")]
         public string Value { get; set; }
+
+        public string Url { get; set; }
     }
 
     public class Title

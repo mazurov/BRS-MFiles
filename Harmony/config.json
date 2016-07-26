@@ -1,24 +1,34 @@
 ﻿{
   "AppVersion": "1.0",
   "View": "Web service",
-  "StartDate":  "2016-06-01",
+  "StartDate": "2015-07-20",
+  "TreatiesServiceUrl": "http://informea.pops.int/CountryProfiles/brsTreatyProfile.svc",
+  "ThumbnailsUrlPattern": "http://informea.pops.int/mfthumbs/thumbnail.new?vault={vault}&file={file}",
+  "DeleteNotProcessed": true, 
   "Vaults": [
     {
-      "Name": "Basel"
+      "Name": "Basel",
+      "Url": "http://www.basel.int/Portals/4/download.aspx?d=",
+      "Enabled": false
     },
     {
-      "Name": "Rotterdam"
+      "Name": "Rotterdam",
+      "Url": "http://www.pic.int/Portals/5/download.aspx?d=",
+      "Enabled": false
     },
     {
       "Name": "Stockholm Production",
-      "NameInDb": "stockholm"
+      "NameInDb": "stockholm",
+      "Url": "http://chm.pops.int/Portals/0/download.aspx?d=",
+      "Enabled": false
     },
     {
       "Name": "Intranet",
       "NameInDb": "brs",
-      "Enabled":  false 
+      "Enabled": true,
+      "Url": ""
     }
 
-  ] 
+  ]
 }
 

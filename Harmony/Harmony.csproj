@@ -45,6 +45,10 @@
       <HintPath>..\packages\FX.Configuration.0.4.1\lib\net45\fx.configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MimeSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MimeSharp.1.0.0\lib\MimeSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -90,6 +94,10 @@
     <ProjectReference Include="..\MFilesLib\MFilesLib.csproj">
       <Project>{64c4daae-5e6b-42f5-8c93-e0ac36ff8190}</Project>
       <Name>MFilesLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TreatiesService\TreatiesService.csproj">
+      <Project>{20603658-6b28-4699-a97c-cffb2aa0e243}</Project>
+      <Name>TreatiesService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

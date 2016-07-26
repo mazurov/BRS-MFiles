@@ -9,8 +9,8 @@
 //------------------------------------------------------------------------------
 
 // Original file name:
-// Generation date: 6/19/2016 12:00:09 AM
-namespace TreatiesService.Service
+// Generation date: 7/26/2016 6:17:50 PM
+namespace TreatiesService.Treaties
 {
     
     /// <summary>
@@ -38,12 +38,12 @@ namespace TreatiesService.Service
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, "CountryProfiles", "TreatiesService.Service");
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "CountryProfiles", "TreatiesService.Treaties");
             if ((resolvedType != null))
             {
                 return resolvedType;
             }
-            resolvedType = this.DefaultResolveType(typeName, "brsWsCore", "TreatiesService.Service.brsWsCore");
+            resolvedType = this.DefaultResolveType(typeName, "brsWsCore", "TreatiesService.Treaties.brsWsCore");
             if ((resolvedType != null))
             {
                 return resolvedType;
@@ -58,11 +58,11 @@ namespace TreatiesService.Service
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
         protected string ResolveNameFromType(global::System.Type clientType)
         {
-            if (clientType.Namespace.Equals("TreatiesService.Service.brsWsCore", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("TreatiesService.Treaties.brsWsCore", global::System.StringComparison.Ordinal))
             {
                 return string.Concat("brsWsCore.", clientType.Name);
             }
-            if (clientType.Namespace.Equals("TreatiesService.Service", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("TreatiesService.Treaties", global::System.StringComparison.Ordinal))
             {
                 return string.Concat("CountryProfiles.", clientType.Name);
             }
@@ -106,19 +106,19 @@ namespace TreatiesService.Service
         /// There are no comments for countryNames in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        public global::System.Data.Services.Client.DataServiceQuery<TreatiesService.Service.brsWsCore.brsCountryName> countryNames
+        public global::System.Data.Services.Client.DataServiceQuery<TreatiesService.Treaties.brsWsCore.brsCountryName> countryNames
         {
             get
             {
                 if ((this._countryNames == null))
                 {
-                    this._countryNames = base.CreateQuery<TreatiesService.Service.brsWsCore.brsCountryName>("countryNames");
+                    this._countryNames = base.CreateQuery<TreatiesService.Treaties.brsWsCore.brsCountryName>("countryNames");
                 }
                 return this._countryNames;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        private global::System.Data.Services.Client.DataServiceQuery<TreatiesService.Service.brsWsCore.brsCountryName> _countryNames;
+        private global::System.Data.Services.Client.DataServiceQuery<TreatiesService.Treaties.brsWsCore.brsCountryName> _countryNames;
         /// <summary>
         /// There are no comments for TreatiesInfo in the schema.
         /// </summary>
@@ -173,7 +173,7 @@ namespace TreatiesService.Service
         /// There are no comments for countryNames in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        public void AddTocountryNames(TreatiesService.Service.brsWsCore.brsCountryName brsCountryName)
+        public void AddTocountryNames(TreatiesService.Treaties.brsWsCore.brsCountryName brsCountryName)
         {
             base.AddObject("countryNames", brsCountryName);
         }
@@ -1032,8 +1032,8 @@ namespace TreatiesService.Service
     }
 }
 // Original file name:
-// Generation date: 6/19/2016 12:00:09 AM
-namespace TreatiesService.Service.brsWsCore
+// Generation date: 7/26/2016 6:17:50 PM
+namespace TreatiesService.Treaties.brsWsCore
 {
     
     /// <summary>

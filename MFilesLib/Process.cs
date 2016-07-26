@@ -94,7 +94,7 @@ namespace MFilesLib
             VaultsOnServer vaultsOnServer = _mfilesServer.GetVaults();
 
             IList<Tuple<string, Vault, IView>> data = new List<Tuple<string, Vault, IView>>();
-            foreach (string vaultName in vaultNames)
+            foreach (var vaultName in vaultNames)
             {
                 IVaultOnServer vaultOnServer;
                 try
