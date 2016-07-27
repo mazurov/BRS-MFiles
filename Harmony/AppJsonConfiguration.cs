@@ -13,6 +13,7 @@ namespace Harmony
         public string NameInDb { get; set; }
         public string Url { get; set; }
         public bool Enabled { get; set; }
+        public List<string> ListProperties { get; set; }
     }
     public class AppJsonConfiguration : JsonConfiguration
     {

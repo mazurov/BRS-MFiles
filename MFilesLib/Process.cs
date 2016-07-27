@@ -69,7 +69,7 @@ namespace MFilesLib
         }
 
         public static void Run(string serverName, string userName, string password, string[] vaultNames, string viewName,
-            DateTime startDate, IProcessor processor)
+            DateTime startDate, IDictionary<string, string[]> listProperties, IProcessor processor)
         {
             _mfilesServer = new MFilesServerApplication();
             MFServerConnection result;
@@ -112,6 +112,34 @@ namespace MFilesLib
                 {
                     Trace.TraceError($"Could not logging to vault '{vaultName}'");
                     continue;
+                }
+
+                if (listProperties.ContainsKey(vaultName))
+                {
+                    foreach (var listProperty in listProperties[vaultName])
+                    {
+                        var listId = vault.PropertyDefOperations.GetPropertyDefs();
+                        Trace.TraceInformation($"Property id of {listProperty}={listId}");
+                        var def =
+                            vault.PropertyDefOperations.GetPropertyDefs()
+                                .Cast<PropertyDef>()
+                                .SingleOrDefault(x => x.Name == listProperty);
+                        
+                        if (def == null || !def.BasedOnValueList)
+                        {
+                            Trace.TraceError($"Property {listProperty} in {vaultName} is not a list");
+                            continue;
+                        }
+
+                        var items = vault.ValueListItemOperations.GetValueListItems(def.ValueList,true,MFExternalDBRefreshType.MFExternalDBRefreshTypeQuick);
+                        foreach (ValueListItem item in items)
+                        {
+                            Trace.TraceInformation($"{item.Name} guid is {item.DisplayID}");
+                        
+                        }
+
+
+                    }
                 }
 
                 IView view = vault.ViewOperations.GetViews().Cast<IView>().FirstOrDefault(v => v.Name == viewName);

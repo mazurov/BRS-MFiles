@@ -109,7 +109,7 @@ namespace Harmony
 
         public string ConnectionString { get;}
 
-        public List<Guid> ProcessedMFilesGuids { get; set; }
+        public List<Guid> ProcessedMFilesGuids { get; set; } = new List<Guid>();
 
         public IProcessorContext CreateContext()
         {

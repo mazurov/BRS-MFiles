@@ -33,6 +33,7 @@ namespace Harmony
             Trace.TraceInformation($"Harmony version {config.AppVersion}");
             ProcessVaults.Run(secret.MFiles.ServerName, secret.MFiles.UserName, secret.MFiles.Password,
                 config.Vaults.Select(v => v.Name).ToArray(), config.View, config.StartDate,
+                config.Vaults.ToDictionary(vault => vault.Name, vault => vault.ListProperties?.ToArray() ?? new string[] {}),
                 new MainProcessor(secret.ConnectionString, config.Vaults.ToDictionary(cfg => cfg.Name, cfg => cfg),
                     config.ThumbnailsUrlPattern, new CountriesClient(config.TreatiesServiceUrl),
                     config.DeleteNotProcessed)
