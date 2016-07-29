@@ -145,11 +145,9 @@ namespace MFilesLib
             if (PropertyDefinitions.ContainsKey(key))
             {
                 var pdef = PropertyDefinitions[key];
-                if (pdef.ValueList > 0)
-                {
-                    var items = Vault.ValueListItemOperations.GetValueListItems(pdef.ValueList);
-                    result.AddRange(from ValueListItem item in items select item.Name);
-                }
+                if (pdef.ValueList <= 0) return result.ToArray();
+                var items = Vault.ValueListItemOperations.GetValueListItems(pdef.ValueList);
+                result.AddRange(from ValueListItem item in items select item.Name);
             }
             return result.ToArray();
         }

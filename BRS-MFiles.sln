@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harmony", "Harmony\Harmony.csproj", "{365E8A95-E745-4653-A4E7-7C4B36027843}"
 EndProject
@@ -26,6 +26,7 @@ Global
 		{365E8A95-E745-4653-A4E7-7C4B36027843}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{365E8A95-E745-4653-A4E7-7C4B36027843}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{365E8A95-E745-4653-A4E7-7C4B36027843}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{365E8A95-E745-4653-A4E7-7C4B36027843}.Release|Any CPU.Build.0 = Release|Any CPU
 		{64C4DAAE-5E6B-42F5-8C93-E0AC36FF8190}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{64C4DAAE-5E6B-42F5-8C93-E0AC36FF8190}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64C4DAAE-5E6B-42F5-8C93-E0AC36FF8190}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,6 +38,7 @@ Global
 		{20603658-6B28-4699-A97C-CFFB2AA0E243}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{20603658-6B28-4699-A97C-CFFB2AA0E243}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20603658-6B28-4699-A97C-CFFB2AA0E243}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20603658-6B28-4699-A97C-CFFB2AA0E243}.Release|Any CPU.Build.0 = Release|Any CPU
 		{84E617E8-EEB5-4B72-B859-1B5DEEDFF093}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{84E617E8-EEB5-4B72-B859-1B5DEEDFF093}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84E617E8-EEB5-4B72-B859-1B5DEEDFF093}.Release|Any CPU.ActiveCfg = Release|Any CPU

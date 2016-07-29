@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -33,9 +34,9 @@ namespace Harmony
             Trace.TraceInformation($"Harmony version {config.AppVersion}");
             ProcessVaults.Run(secret.MFiles.ServerName, secret.MFiles.UserName, secret.MFiles.Password,
                 config.Vaults.Select(v => v.Name).ToArray(), config.View, config.StartDate,
-                config.Vaults.ToDictionary(vault => vault.Name, vault => vault.ListProperties?.ToArray() ?? new string[] {}),
+                config.Vaults.Where(v => v.Crm !=null).ToDictionary(vault => vault.Name, vault => from p in vault.Crm select new PropertyListType(vault.Name, p.Type, p.Property)),
                 new MainProcessor(secret.ConnectionString, config.Vaults.ToDictionary(cfg => cfg.Name, cfg => cfg),
-                    config.ThumbnailsUrlPattern, new CountriesClient(config.TreatiesServiceUrl),
+                    config.ThumbnailsUrlPattern, new CountriesClient(config.TreatiesServiceUrl), new ConferencesClient(config.ConferencesServiceUrl),
                     config.DeleteNotProcessed)
                 );
         }

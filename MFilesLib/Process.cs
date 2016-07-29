@@ -69,7 +69,7 @@ namespace MFilesLib
         }
 
         public static void Run(string serverName, string userName, string password, string[] vaultNames, string viewName,
-            DateTime startDate, IDictionary<string, string[]> listProperties, IProcessor processor)
+            DateTime startDate, IDictionary<string, IEnumerable<PropertyListType>> listProperties, IProcessor processor)
         {
             _mfilesServer = new MFilesServerApplication();
             MFServerConnection result;
@@ -89,9 +89,11 @@ namespace MFilesLib
                 return;
             }
 
+            var topContext = processor.CreateContext();
+
             Trace.TraceInformation($"Hello from Run {serverName}");
 
-            VaultsOnServer vaultsOnServer = _mfilesServer.GetVaults();
+            var vaultsOnServer = _mfilesServer.GetVaults();
 
             IList<Tuple<string, Vault, IView>> data = new List<Tuple<string, Vault, IView>>();
             foreach (var vaultName in vaultNames)
@@ -116,28 +118,37 @@ namespace MFilesLib
 
                 if (listProperties.ContainsKey(vaultName))
                 {
+
                     foreach (var listProperty in listProperties[vaultName])
                     {
                         var listId = vault.PropertyDefOperations.GetPropertyDefs();
-                        Trace.TraceInformation($"Property id of {listProperty}={listId}");
+                        Trace.TraceInformation($"Property id of {listProperty.PropertyName}={listId}");
                         var def =
                             vault.PropertyDefOperations.GetPropertyDefs()
                                 .Cast<PropertyDef>()
-                                .SingleOrDefault(x => x.Name == listProperty);
+                                .SingleOrDefault(x => x.Name == listProperty.PropertyName);
                         
                         if (def == null || !def.BasedOnValueList)
                         {
-                            Trace.TraceError($"Property {listProperty} in {vaultName} is not a list");
+                            Trace.TraceError($"Property {listProperty.PropertyName} in {vaultName} is not a list");
                             continue;
                         }
 
-                        var items = vault.ValueListItemOperations.GetValueListItems(def.ValueList,true,MFExternalDBRefreshType.MFExternalDBRefreshTypeQuick);
+                        ValueListItems items = vault.ValueListItemOperations.GetValueListItems(def.ValueList,true,MFExternalDBRefreshType.MFExternalDBRefreshTypeQuick);
+                        
                         foreach (ValueListItem item in items)
                         {
-                            Trace.TraceInformation($"{item.Name} guid is {item.DisplayID}");
+                            Guid guid;
+                            if (!Guid.TryParse(item.DisplayID, out guid))
+                            {
+                                guid = Guid.NewGuid();
+                            }
+
+                            listProperty.Items.Add(new PropertyListItem(guid, item.Name));
                         
                         }
 
+                        topContext.ProcessListProperty(listProperty);
 
                     }
                 }

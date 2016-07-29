@@ -13,5 +13,6 @@ namespace MFilesLib
     public interface IProcessorContext
     {
         void ProcessObject(ObjectVersionWrapper obj);
+        void ProcessListProperty(PropertyListType obj);
     }
 }

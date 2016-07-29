@@ -1,16 +1,22 @@
 ﻿{
   "AppVersion": "1.0",
   "View": "Web service",
-  "StartDate": "2016-08-25",
+  "StartDate": "2016-06-25",
   "TreatiesServiceUrl": "http://informea.pops.int/CountryProfiles/brsTreatyProfile.svc",
+  "ConferencesServiceUrl": "http://informea.pops.int/Meetings/Conferences.svc", 
   "ThumbnailsUrlPattern": "http://informea.pops.int/mfthumbs/thumbnail.new?vault={vault}&file={file}",
-    "DeleteNotProcessed": true,
-    
+  "DeleteNotProcessed": true,
   "Vaults": [
     {
       "Name": "Basel",
       "Url": "http://www.basel.int/Portals/4/download.aspx?d=",
       "Enabled": false,
+      "Crm": [
+        {
+          "Type": "meeting",
+          "Property": "CRM-Meeting" 
+        }
+      ], 
       "ListProperties": [ "Term-Chemical" ] 
     },
     {

@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Linq;
+using System.Runtime.Remoting;
 using System.Runtime.Serialization;
 using MFilesLib;
 using Documents;
 using TreatiesService;
+using TreatiesService.Conferences;
 
 namespace Harmony
 {
 
-    class MainProcessorContext : IProcessorContext
+    internal class MainProcessorContext : IProcessorContext
     {
         private readonly DocumentsContext _ctx;
         private readonly MainProcessor _parent;
@@ -30,6 +33,8 @@ namespace Harmony
             }
             Trace.TraceInformation("Connection open");
         }
+
+
 
         public void ProcessObject(ObjectVersionWrapper obj)
         {
@@ -85,16 +90,73 @@ namespace Harmony
             }
             
         }
+
+        public void ProcessListProperty(PropertyListType lst)
+        {
+            if (lst.Type == "meeting")
+            {
+                ProcessCrmMeetings(lst);
+            }
+
+            using (var trans = _ctx.Database.BeginTransaction())
+            {
+                try
+                {
+                    _ctx.SaveChanges();
+                    trans.Commit();
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    Trace.TraceError($"ProcessListProperty {ex.Message}");
+                }
+            }
+        }
+
+        private void ProcessCrmMeetings(PropertyListType lst)
+        {
+            var serviceMeetings = _parent.Conferences.Meetings;
+            foreach (var source in lst.Items)
+            {
+                Meetings meetingInService;
+                serviceMeetings.TryGetValue(source.Guid, out meetingInService);
+                if (meetingInService == null)
+                {
+                    Trace.TraceWarning(
+                        $"Not found {source.Guid} ({source.Value}) in the service {_parent.Conferences.ServiceUri}");
+                }
+
+                var url = meetingInService?.url;
+                var target = _ctx.Values.OfType<MeetingValue>().FirstOrDefault(t => t.ListPropertyId == source.Guid);
+                if (target == null)
+                {
+                    target = new MeetingValue
+                    {
+                        ListPropertyId = source.Guid,
+                        Value = source.Value,
+                        Url = url
+                    };
+                    _ctx.Values.Add(target);
+                }
+                else
+                {
+                    target.Value = source.Value;
+                    target.Url = url;
+
+                }
+            }
+        }
     }
 
     internal class MainProcessor : IProcessor
     {
-        private DocumentsContext _ctx;
-        public MainProcessor(string connectionString, IDictionary<string, VaultDetails> vaultDetails, string thumbnailsUrlPattern, CountriesClient countries, bool deleteNotInList)
+        private readonly DocumentsContext _ctx;
+        public MainProcessor(string connectionString, IDictionary<string, VaultDetails> vaultDetails, string thumbnailsUrlPattern, CountriesClient countries, ConferencesClient conferences, bool deleteNotInList)
         {
             ConnectionString = connectionString;
             VaultDetails = vaultDetails;
             Countries = countries;
+            Conferences = conferences;
             ThumbnailsUrlPattern = thumbnailsUrlPattern;
             DeleteNotInList = deleteNotInList;
 
@@ -104,6 +166,7 @@ namespace Harmony
 
         public IDictionary<string, VaultDetails> VaultDetails { get; }
         public CountriesClient Countries { get; }
+        public ConferencesClient Conferences { get; }
         public string ThumbnailsUrlPattern { get; }
         public bool DeleteNotInList { get; }
 
