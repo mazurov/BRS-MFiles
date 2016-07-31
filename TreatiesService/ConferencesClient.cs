@@ -11,6 +11,7 @@ namespace TreatiesService
     {
         private readonly ConferencesEntities _ctx;
         private IDictionary<Guid, Meetings> _meetings;
+        private IDictionary<Guid, Terms> _terms;
 
         public ConferencesClient(string serviceUri)
         {
@@ -52,6 +53,36 @@ namespace TreatiesService
             }
         }
 
+        public IDictionary<Guid, Terms> Terms
+        {
+            get
+            {
+                if (_terms == null)
+                {
+                    var skip = 0;
+                    var results = new List<IDictionary<Guid, Terms>>();
+                    while (true)
+                    {
+                        var result = _ctx.Terms.Skip(skip).ToDictionary(x => x.id, x => x);
+                        if (result.Count > 0)
+                        {
+                            results.Add(result);
+                            skip += 250;
+                        }
+                        else
+                        {
+                            _terms = results.SelectMany(dict => dict).ToDictionary(x => x.Key, x => x.Value);
+                            break;
+                        }
+                    }
+
+                }
+
+                return _terms;
+            }
+        }
+
+ 
         public string ServiceUri { get; }
        
     }

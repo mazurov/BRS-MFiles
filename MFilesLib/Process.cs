@@ -9,18 +9,20 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Transactions;
 using MFilesAPI;
+using NLog;
 
 namespace MFilesLib
 {
     public static class ProcessVaults
     {
         private static MFilesServerApplication _mfilesServer;
+        private static readonly Logger ClassLogger = LogManager.GetCurrentClassLogger();
 
         private static void ProcessData(string vaultName, Vault vault, IView view, DateTime startDate,
             IProcessor processor)
         {
             Thread.CurrentThread.Name = $"Thread-{vaultName}";
-            Trace.TraceInformation($"Hello from {vaultName}");
+
 
             var conditions = view.SearchConditions;
             var dfDate = new DataFunctionCall();
@@ -80,18 +82,18 @@ namespace MFilesLib
             }
             catch (COMException ex)
             {
-                Trace.TraceError($"Could not connecto to M-Files server {ex.Message}");
+                ClassLogger.Error($"Could not connecto to M-Files server {ex.Message}");
                 return;
             }
             if (result != MFServerConnection.MFServerConnectionAuthenticated)
             {
-                Trace.TraceError("Could not connecto to M-Files server");
+                ClassLogger.Error("Could not connecto to M-Files server");
                 return;
             }
 
             var topContext = processor.CreateContext();
 
-            Trace.TraceInformation($"Hello from Run {serverName}");
+            ClassLogger.Info($"Hello from Run {serverName}");
 
             var vaultsOnServer = _mfilesServer.GetVaults();
 
@@ -105,14 +107,14 @@ namespace MFilesLib
                 }
                 catch (COMException)
                 {
-                    Trace.TraceError($"Could not find vault '{vaultName}'");
+                    ClassLogger.Error($"Could not find vault '{vaultName}'");
                     continue;
                 }
 
                 Vault vault = vaultOnServer.LogIn();
                 if (!vault.LoggedIn)
                 {
-                    Trace.TraceError($"Could not logging to vault '{vaultName}'");
+                    ClassLogger.Error($"Could not logging to vault '{vaultName}'");
                     continue;
                 }
 
@@ -122,7 +124,7 @@ namespace MFilesLib
                     foreach (var listProperty in listProperties[vaultName])
                     {
                         var listId = vault.PropertyDefOperations.GetPropertyDefs();
-                        Trace.TraceInformation($"Property id of {listProperty.PropertyName}={listId}");
+                        ClassLogger.Info($"Property id of {listProperty.PropertyName}={listId}");
                         var def =
                             vault.PropertyDefOperations.GetPropertyDefs()
                                 .Cast<PropertyDef>()
@@ -130,7 +132,7 @@ namespace MFilesLib
                         
                         if (def == null || !def.BasedOnValueList)
                         {
-                            Trace.TraceError($"Property {listProperty.PropertyName} in {vaultName} is not a list");
+                            ClassLogger.Error($"Property {listProperty.PropertyName} in {vaultName} is not a list");
                             continue;
                         }
 
@@ -156,7 +158,7 @@ namespace MFilesLib
                 IView view = vault.ViewOperations.GetViews().Cast<IView>().FirstOrDefault(v => v.Name == viewName);
                 if (view == null)
                 {
-                    Trace.TraceWarning($"Could not find view '{viewName}' in vault  '{vaultName}'");
+                    ClassLogger.Warn($"Could not find view '{viewName}' in vault  '{vaultName}'");
                     continue;
                 }
                 data.Add(Tuple.Create(vaultName, vault, view));

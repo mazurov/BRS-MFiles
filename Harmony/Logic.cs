@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Documents;
 using MFilesLib;
 using MimeSharp;
+using NLog;
 using TreatiesService;
 
 namespace Harmony
@@ -14,6 +15,7 @@ namespace Harmony
     public class Logic
     {
         private static readonly Mime Mime = new Mime();
+        private static readonly Logger ClassLogger = LogManager.GetCurrentClassLogger();
 
         public static MFilesDocument FindDocument(DocumentsContext ctx, Guid docGuid)
         {
@@ -96,7 +98,7 @@ namespace Harmony
                     catch (Exception ex)
                     {
                         trans.Rollback();
-                        Trace.TraceError("SQL exception "  + ex.Message);
+                        ClassLogger.Error("SQL exception "  + ex.Message);
                         return false;
                     }
                 }
@@ -281,11 +283,11 @@ namespace Harmony
             Debug.Assert(doc != null);
             if (doc.Title != null)
             {
-                Trace.TraceInformation($"Delete document '{doc.Title.Value}'");
+                ClassLogger.Warn($"Delete document '{doc.Title.Value}'");
             }
             else
             {
-                Trace.TraceInformation($"Delete document {doc.Guid}");
+                ClassLogger.Warn($"Delete document {doc.Guid}");
             }
 
             var documents = from x in ctx.Documents where x.DocumentId == doc.Guid select x;
@@ -312,20 +314,20 @@ namespace Harmony
                 catch (Exception ex)
                 {
                     trans.Rollback();
-                    Trace.TraceError($"Delete document {ex.Message}");
+                    ClassLogger.Error($"Delete document {ex.Message}");
                 }
             }
         }
 
         public static void DeleteNotInList(DocumentsContext ctx, ICollection<Guid> guids)
         {
-            Trace.TraceInformation("Find documents for removing...");
+            ClassLogger.Info("Find documents for removing...");
             //ctx.Database.CommandTimeout = 600;
             var delGuids = (from mfdoc in ctx.MFilesDocuments select mfdoc.Guid).ToList().Except(guids);
             var toDelete =
                 (from mfdoc in ctx.MFilesDocuments where delGuids.Contains(mfdoc.Guid) select mfdoc).ToList();
             //ctx.Database.CommandTimeout = 60;
-            Trace.TraceInformation($"Number of files to remove = {toDelete.Count()}");
+            ClassLogger.Info($"Number of files to remove = {toDelete.Count()}");
             foreach (var doc in toDelete)
             {
                 Delete(ctx, doc);
@@ -367,7 +369,7 @@ namespace Harmony
 
             if (languageCode == null)
             {
-                Trace.TraceWarning("Could not find language code for  {0} (Document {1})",
+                ClassLogger.Warn("Could not find language code for  {0} (Document {1})",
                     sourceDoc.Language,
                     sourceDoc.UnNumber);
                 return null;
@@ -439,7 +441,7 @@ namespace Harmony
                 {
                     status = false;
                     trans.Rollback();
-                    Trace.TraceError(ex.Message);
+                    ClassLogger.Error(ex);
                 }
             }
 

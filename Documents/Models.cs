@@ -21,6 +21,7 @@ namespace Documents
 
         public DbSet<Document> Documents { get; set; }
         public DbSet<ListProperty> Values { get; set; }
+        public DbSet<LeoTerm> LeoTerms { get; set; }
         public DbSet<Title> Titles { get; set; }
         public DbSet<Description> Descriptions { get; set; }
         public DbSet<File> Files { get; set; }
@@ -248,7 +249,13 @@ namespace Documents
 
     public class TermValue : ListProperty
     {
+        public TermValue()
+        {
+            LeoTerms = new HashSet<LeoTerm>();
+        }
+
         public virtual ICollection<Document> Documents { get; set; }
+        public virtual ICollection<LeoTerm> LeoTerms { get; set; }
     }
 
     public class TagValue : ListProperty
@@ -269,5 +276,16 @@ namespace Documents
     public class MeetingTypeValue : ListProperty
     {
         public virtual ICollection<Document> Documents { get; set; }
+    }
+
+    public class LeoTerm
+    {
+        [Key]
+        public Guid LeoTermId { get; set; }
+
+        public string Name { get; set; }
+        public string Url { get; set; }
+
+        public virtual ICollection<TermValue> Terms { get; set; }
     }
 }

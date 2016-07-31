@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
-using Documents;
+using Essential.Diagnostics;
 using MFilesLib;
-using MFilesAPI;
+using NLog;
 using TreatiesService;
 
 namespace Harmony
 {
     internal class Program
     {
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
             Run();
@@ -24,19 +22,12 @@ namespace Harmony
         {
             var config = new AppJsonConfiguration();
             var secret = new PrivateJsonConfiguration();
-
-            var listener = new ConsoleTraceListener()
-            {
-                //TraceOutputOptions = TraceOptions.ThreadId
-            };
-            Trace.Listeners.Add(listener);
-
-            Trace.TraceInformation($"Harmony version {config.AppVersion}");
+            _logger.Info($"Harmony version {config.AppVersion}");
             ProcessVaults.Run(secret.MFiles.ServerName, secret.MFiles.UserName, secret.MFiles.Password,
                 config.Vaults.Select(v => v.Name).ToArray(), config.View, config.StartDate,
                 config.Vaults.Where(v => v.Crm !=null).ToDictionary(vault => vault.Name, vault => from p in vault.Crm select new PropertyListType(vault.Name, p.Type, p.Property)),
                 new MainProcessor(secret.ConnectionString, config.Vaults.ToDictionary(cfg => cfg.Name, cfg => cfg),
-                    config.ThumbnailsUrlPattern, new CountriesClient(config.TreatiesServiceUrl), new ConferencesClient(config.ConferencesServiceUrl),
+                    config.ThumbnailsUrlPattern, config.BrsTermsUrlPattern, config.LeoTermsUrlPattern, new CountriesClient(config.TreatiesServiceUrl), new ConferencesClient(config.ConferencesServiceUrl),
                     config.DeleteNotProcessed)
                 );
         }

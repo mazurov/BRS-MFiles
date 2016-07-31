@@ -1,10 +1,12 @@
 ﻿{
   "AppVersion": "1.0",
   "View": "Web service",
-  "StartDate": "2016-06-25",
+  "StartDate": "2008-06-25",
   "TreatiesServiceUrl": "http://informea.pops.int/CountryProfiles/brsTreatyProfile.svc",
-  "ConferencesServiceUrl": "http://informea.pops.int/Meetings/Conferences.svc", 
+  "ConferencesServiceUrl": "http://informea.pops.int/Meetings/Conferences.svc",
   "ThumbnailsUrlPattern": "http://informea.pops.int/mfthumbs/thumbnail.new?vault={vault}&file={file}",
+  "BrsTermsUrlPattern": "http://www.brsmeas.org/terms/{term}",
+  "LeoTermsUrlPattern": "http://leo.informea.org/terms/{term}",  
   "DeleteNotProcessed": true,
   "Vaults": [
     {
@@ -14,10 +16,13 @@
       "Crm": [
         {
           "Type": "meeting",
-          "Property": "CRM-Meeting" 
+          "Property": "CRM-Meeting"
+        },
+        {
+          "Type": "term",
+          "Property":  "Term-ScientificTechnicalPublications"  
         }
-      ], 
-      "ListProperties": [ "Term-Chemical" ] 
+      ] 
     },
     {
       "Name": "Rotterdam",

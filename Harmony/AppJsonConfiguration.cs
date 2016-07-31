@@ -13,7 +13,6 @@ namespace Harmony
         public string NameInDb { get; set; }
         public string Url { get; set; }
         public bool Enabled { get; set; }
-        public List<string> ListProperties { get; set; }
         public List<CrmDetail> Crm { get; set; }
     }
 
@@ -44,6 +43,9 @@ namespace Harmony
         public string TreatiesServiceUrl { get; set; }
         public string ConferencesServiceUrl { get; set; }
         public string ThumbnailsUrlPattern { get; set; }
+        public string BrsTermsUrlPattern { get; set; }
+        public string LeoTermsUrlPattern { get; set; }
+
         public bool DeleteNotProcessed { get; set; }
 
     }
