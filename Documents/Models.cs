@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-
 
 namespace Documents
 {
@@ -15,11 +13,14 @@ namespace Documents
         {
         }
 
+
         public DocumentsContext() : base("DocumentsContext")
         {
+            
         }
 
         public DbSet<Document> Documents { get; set; }
+        public DbSet<ListPropertyType> ValueTypes { get; set; }
         public DbSet<ListProperty> Values { get; set; }
         public DbSet<LeoTerm> LeoTerms { get; set; }
         public DbSet<Title> Titles { get; set; }
@@ -28,10 +29,76 @@ namespace Documents
 
         public DbSet<MFilesDocument> MFilesDocuments { get; set; }
 
-
-        public void Detach(object entity)
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            ((IObjectContextAdapter) this).ObjectContext.Detach(entity);
+            modelBuilder.Entity<Document>()
+                .HasMany(t => t.Chemicals)
+                .WithMany()
+                .Map(m =>
+                {
+                    m.ToTable("DocumentsChemicals");
+                    m.MapLeftKey("DocumentId");
+                    m.MapRightKey("PropertyId");
+                });
+
+            modelBuilder.Entity<Document>()
+                .HasMany(t => t.Meetings)
+                .WithMany()
+                .Map(m =>
+                {
+                    m.ToTable("DocumentsMeetings");
+                    m.MapLeftKey("DocumentId");
+                    m.MapRightKey("PropertyId");
+                });
+
+            modelBuilder.Entity<Document>()
+                .HasMany(t => t.MeetingsTypes)
+                .WithMany()
+                .Map(m =>
+                {
+                    m.ToTable("DocumentsMeetingsTypes");
+                    m.MapLeftKey("DocumentId");
+                    m.MapRightKey("PropertyId");
+                });
+            modelBuilder.Entity<Document>()
+                .HasMany(t => t.Tags)
+                .WithMany()
+                .Map(m =>
+                {
+                    m.ToTable("DocumentsTags");
+                    m.MapLeftKey("DocumentId");
+                    m.MapRightKey("PropertyId");
+                });
+            modelBuilder.Entity<Document>()
+                .HasMany(t => t.Terms)
+                .WithMany()
+                .Map(m =>
+                {
+                    m.ToTable("DocumentsTerms");
+                    m.MapLeftKey("DocumentId");
+                    m.MapRightKey("PropertyId");
+                });
+
+            modelBuilder.Entity<Document>()
+               .HasMany(t => t.Types)
+               .WithMany()
+               .Map(m =>
+               {
+                   m.ToTable("DocumentsTypes");
+                   m.MapLeftKey("DocumentId");
+                   m.MapRightKey("PropertyId");
+               });
+
+            modelBuilder.Entity<Document>()
+               .HasMany(t => t.Programs)
+               .WithMany()
+               .Map(m =>
+               {
+                   m.ToTable("DocumentsPrograms");
+                   m.MapLeftKey("DocumentId");
+                   m.MapRightKey("PropertyId");
+               });
+
         }
     }
 
@@ -64,13 +131,13 @@ namespace Documents
             // ReSharper disable  DoNotCallOverridableMethodsInConstructor
             Titles = new HashSet<Title>();
             Descriptions = new HashSet<Description>();
-            Chemicals = new HashSet<ChemicalValue>();
-            Terms = new HashSet<TermValue>();
-            Tags = new HashSet<TagValue>();
-            Programs = new HashSet<ProgramValue>();
-            Types = new HashSet<TypeValue>();
-            Meetings = new HashSet<MeetingValue>();
-            MeetingsTypes = new HashSet<MeetingTypeValue>();
+            Chemicals = new HashSet<ListProperty>();
+            Terms = new HashSet<ListProperty>();
+            Tags = new HashSet<ListProperty>();
+            Programs = new HashSet<ListProperty>();
+            Types = new HashSet<ListProperty>();
+            Meetings = new HashSet<ListProperty>();
+            MeetingsTypes = new HashSet<ListProperty>();
             Files = new HashSet<File>();
         }
 
@@ -79,7 +146,6 @@ namespace Documents
 
         [Required]
         [StringLength(255)]
-        [DefaultValue("")]
         public string Convention { get; set; }
 
         [Required]
@@ -87,23 +153,19 @@ namespace Documents
         [Index(IsUnique = true)]
         public string UnNumber { get; set; }
 
-        [DefaultValue("")]
         public string Copyright { get; set; }
 
-        [DefaultValue("")]
         public string Author { get; set; }
 
-        [DefaultValue(false)]
-        public bool IsCorporateAuthor { get; set; }
 
- 
+        public string AuthorType { get; set; }
+
+
         [StringLength(3)]
-        [DefaultValue("")]
-        public String Country { get; set; }
+        public string Country { get; set; }
 
         [StringLength(255)]
-        [DefaultValue("")]
-        public String CountryFull { get; set; }
+        public string CountryFull { get; set; }
 
 
         public DateTime PublicationDate { get; set; }
@@ -116,13 +178,13 @@ namespace Documents
 
         public virtual ICollection<Title> Titles { get; set; }
         public virtual ICollection<Description> Descriptions { get; set; }
-        public virtual ICollection<ChemicalValue> Chemicals { get; set; }
-        public virtual ICollection<TermValue> Terms { get; set; }
-        public virtual ICollection<TagValue> Tags { get; set; }
-        public virtual ICollection<ProgramValue> Programs { get; set; }
-        public virtual ICollection<TypeValue> Types { get; set; }
-        public virtual ICollection<MeetingValue> Meetings { get; set; }
-        public virtual ICollection<MeetingTypeValue> MeetingsTypes { get; set; }
+        public virtual ICollection<ListProperty> Chemicals { get; set; }
+        public virtual ICollection<ListProperty> Terms { get; set; }
+        public virtual ICollection<ListProperty> Tags { get; set; }
+        public virtual ICollection<ListProperty> Programs { get; set; }
+        public virtual ICollection<ListProperty> Types { get; set; }
+        public virtual ICollection<ListProperty> Meetings { get; set; }
+        public virtual ICollection<ListProperty> MeetingsTypes { get; set; }
 
         public virtual ICollection<File> Files { get; set; }
 
@@ -172,18 +234,38 @@ namespace Documents
 
         public virtual MFilesDocument MFilesDocument { get; set; }
     }
-  
 
-    public abstract class ListProperty
+    public class ListPropertyType
     {
-        [Key]
+        public Guid ListPropertyTypeId { get; set; }
+        public string Name { get; set; }
+
+        public virtual ICollection<ListProperty> Properties { get; set; }
+    }
+
+    public class ListProperty
+    {
+        public ListProperty()
+        {
+            LeoTerms = new HashSet<LeoTerm>();
+            Types = new HashSet<ListPropertyType>();
+        }
+
         public Guid ListPropertyId { get; set; }
+
 
         [Required(AllowEmptyStrings = true)]
         [DefaultValue("")]
         public string Value { get; set; }
 
         public string Url { get; set; }
+        [DefaultValue(false)]
+        public bool IsFromCrm { get; set; }
+
+
+        public virtual ICollection<ListPropertyType> Types { get; set; }
+        //public virtual ICollection<Document> Documents { get; set; }
+        public virtual ICollection<LeoTerm> LeoTerms { get; set; }
     }
 
     public class Title
@@ -199,15 +281,15 @@ namespace Documents
 
         [Required]
         [StringLength(3)]
-        public String Language { get; set; }
+        public string Language { get; set; }
 
         [Required]
         [StringLength(255)]
-        public String LanguageFull { get; set; }
+        public string LanguageFull { get; set; }
 
         [Required(AllowEmptyStrings = true)]
         [DefaultValue("")]
-        public String Value { get; set; }
+        public string Value { get; set; }
     }
 
 
@@ -224,59 +306,17 @@ namespace Documents
 
         [Required]
         [StringLength(3)]
-        public String Language { get; set; }
+        public string Language { get; set; }
 
         [Required]
         [StringLength(255)]
-        public String LanguageFull { get; set; }
+        public string LanguageFull { get; set; }
 
         [Required(AllowEmptyStrings = true)]
         [DefaultValue("")]
-        public String Value { get; set; }
+        public string Value { get; set; }
     }
 
-
-    public class ChemicalValue : ListProperty
-    {
-        public virtual ICollection<Document> Documents { get; set; }
-    }
-
-    public class ProgramValue : ListProperty
-    {
-        public virtual ICollection<Document> Documents { get; set; }
-    }
-
-
-    public class TermValue : ListProperty
-    {
-        public TermValue()
-        {
-            LeoTerms = new HashSet<LeoTerm>();
-        }
-
-        public virtual ICollection<Document> Documents { get; set; }
-        public virtual ICollection<LeoTerm> LeoTerms { get; set; }
-    }
-
-    public class TagValue : ListProperty
-    {
-        public virtual ICollection<Document> Documents { get; set; }
-    }
-
-    public class TypeValue : ListProperty
-    {
-        public virtual ICollection<Document> Documents { get; set; }
-    }
-
-    public class MeetingValue : ListProperty
-    {
-        public virtual ICollection<Document> Documents { get; set; }
-    }
-
-    public class MeetingTypeValue : ListProperty
-    {
-        public virtual ICollection<Document> Documents { get; set; }
-    }
 
     public class LeoTerm
     {
@@ -286,6 +326,6 @@ namespace Documents
         public string Name { get; set; }
         public string Url { get; set; }
 
-        public virtual ICollection<TermValue> Terms { get; set; }
+        public virtual ICollection<ListProperty> Properties { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿{
-  "AppVersion": "1.0",
+  "AppVersion": "2.0",
   "View": "Web service",
   "StartDate": "2008-06-25",
   "TreatiesServiceUrl": "http://informea.pops.int/CountryProfiles/brsTreatyProfile.svc",
@@ -20,8 +20,22 @@
         },
         {
           "Type": "term",
-          "Property":  "Term-ScientificTechnicalPublications"  
+          "Property": "Term-ScientificTechnicalPublications"
+        },
+        {
+          "Type": "programme",
+          "Property": "Term-Programme"
+        },
+        {
+          "Type": "tag",
+          "Property": "Term-Topics"
+        },
+        {
+          "Type": "chemical",
+          "Property": "Term-Chemical"
         }
+
+
       ] 
     },
     {

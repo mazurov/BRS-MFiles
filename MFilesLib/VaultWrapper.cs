@@ -17,6 +17,7 @@ namespace MFilesLib
 
         public static readonly string[] ChemicalKeys =
         {
+            "Term-Chemical",
             "Chemical",
             "Chemicals",
             "All Chemicals",
@@ -38,22 +39,32 @@ namespace MFilesLib
 
         public static readonly string[] AuthorKeys =
         {
-            "Corporate Author",
             "Author(s)"
+        };
+
+
+
+        public static readonly string[] CorporateAuthorKeys =
+        {
+            "Corporate Author"
         };
 
         public static readonly string[] ProgramKeys =
         {
+            "Term-Programme",
             "Programme/Subject Matter"
         };
 
         public static readonly string[] TermKeys =
         {
+            "Term-Topics",
             "Term-ScientificTechnicalPublications"
         };
 
         public static readonly string[] TagsKeys =
         {
+            //"Term-Topics",
+            //"Term-ScientificTechnicalPublications",
             "Keyphrases",
             "Keywords",
             "Keyword"

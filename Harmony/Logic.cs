@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Documents;
 using MFilesLib;
 using MimeSharp;
@@ -33,24 +31,34 @@ namespace Harmony
             return file?.Document.MFilesDocument;
         }
 
-        public static string GetAuthor(ObjectVersionWrapper obj, CountriesClient countries)
+        public static Tuple<string, bool> GetAuthor(ObjectVersionWrapper obj, CountriesClient countries)
         {
+            
            
-                var author = string.IsNullOrWhiteSpace(obj.Author) ? null : obj.Author;
-                if (string.IsNullOrWhiteSpace(obj.Player))
-                {
-                    return author;
+            var author = obj.Author;
+            var cauthor = obj.CorporateAuthor;
+            var player = obj.Player;
 
-                }
+            if (!string.IsNullOrWhiteSpace(author))
+            {
+                return new Tuple<string, bool>(author, false);
+            }
+
+            if (!string.IsNullOrEmpty(cauthor))
+            {
+                return new Tuple<string, bool>(cauthor, true);
+            }
+
+            /*if (!string.IsNullOrEmpty(player))
+            {
                 var country = countries.GetCountryIsoCode2(obj.Player);
-                if (country == null && author == null)
+                if (country != null)
                 {
-                    return obj.Player;
+                    return new Tuple<string, bool>(player, true);
                 }
-                else
-                {
-                    return author;
-                }
+            }*/
+
+            return null;
     }
 
 
@@ -67,7 +75,12 @@ namespace Harmony
             masterDoc.MFilesDocument = targetDoc;
             masterDoc.UnNumber = string.IsNullOrEmpty(sourceDoc.UnNumber)?sourceDoc.Name:sourceDoc.UnNumber;    
             masterDoc.Convention = vaultDetails[sourceDoc.VaultName].NameInDb ?? sourceDoc.VaultName.ToLower();
-            masterDoc.Author = GetAuthor(sourceDoc, countries);
+            var authorAndType = GetAuthor(sourceDoc, countries);
+            if (authorAndType != null)
+            {
+                masterDoc.Author = authorAndType.Item1;
+                masterDoc.AuthorType = authorAndType.Item2 ? "organization" : "person";
+            }
             masterDoc.CountryFull = countries.GetCountryIsoCode2(sourceDoc.Country) != null ? sourceDoc.Country: null;
             masterDoc.Country = countries.GetCountryIsoCode2(masterDoc.CountryFull);
             masterDoc.Copyright = sourceDoc.Copyright;
@@ -99,7 +112,7 @@ namespace Harmony
                     {
                         trans.Rollback();
                         ClassLogger.Error("SQL exception "  + ex.Message);
-                        return false;
+                        throw;
                     }
                 }
             }
@@ -109,18 +122,20 @@ namespace Harmony
         private static void ProcessDocumentTypes(DocumentsContext ctx, Document masterDoc, ObjectVersionWrapper sourceDoc)
         {
             masterDoc.Types.Clear();
+            var propertyType = ctx.ValueTypes.First(x => x.Name == ListPropertyTypesNames.Type);
             foreach (var type in sourceDoc.Types)
             {
-                var targetType = ctx.Values.OfType<TypeValue>().FirstOrDefault(t => t.Value == type.Value);
+                var targetType = ctx.Values.FirstOrDefault(t => t.Value == type.Value);
                 if (targetType == null)
                 {
-                    targetType = new TypeValue
+                    targetType = new Documents.ListProperty
                     {
                         ListPropertyId = Guid.NewGuid(),
                         Value = type.Value
                     };
                     ctx.Values.Add(targetType);
                 }
+                targetType.Types.Add(propertyType);
                 masterDoc.Types.Add(targetType);
             }
         }
@@ -128,6 +143,7 @@ namespace Harmony
         private static void ProcessTerms(DocumentsContext ctx, Document masterDoc, ObjectVersionWrapper sourceDoc)
         {
             masterDoc.Terms.Clear();
+            var propertyType = ctx.ValueTypes.First(x => x.Name == ListPropertyTypesNames.Term);
             foreach (var source in sourceDoc.Terms)
             {
                 var values = (source.IsStringProperty
@@ -135,7 +151,7 @@ namespace Harmony
                     : new[] { source.Value });
                 foreach (var value in values)
                 {
-                    var target = ctx.Values.OfType<TermValue>().FirstOrDefault(t => t.Value == value);
+                    var target = ctx.Values.FirstOrDefault(t => t.Value == value);
                     if (target == null)
                     {
                         var listPropertyId = Guid.NewGuid();
@@ -143,13 +159,14 @@ namespace Harmony
                         {
                             listPropertyId = source.Guid.Value;
                         }
-                        target = new TermValue
+                        target = new Documents.ListProperty
                         {
                             ListPropertyId = listPropertyId,
                             Value = value.Trim()
                         };
                         ctx.Values.Add(target);
                     }
+                    target.Types.Add(propertyType);
                     masterDoc.Terms.Add(target);
                 }
             }
@@ -158,6 +175,7 @@ namespace Harmony
         private static void ProcessTags(DocumentsContext ctx, Document masterDoc, ObjectVersionWrapper sourceDoc)
         {
             masterDoc.Tags.Clear();
+            var propertyType = ctx.ValueTypes.First(x => x.Name == ListPropertyTypesNames.Tag);
             foreach (var source in sourceDoc.Tags)
             {
                 var values = (source.IsStringProperty
@@ -165,7 +183,7 @@ namespace Harmony
                     : new[] { source.Value.ToLower() });
                 foreach (var value in values)
                 {
-                    var target = ctx.Values.OfType<TagValue>().FirstOrDefault(t => t.Value == value);
+                    var target = ctx.Values.FirstOrDefault(t => t.Value == value);
                     if (target == null)
                     {
                         var listPropertyId = Guid.NewGuid();
@@ -173,13 +191,14 @@ namespace Harmony
                         {
                             listPropertyId = source.Guid.Value;
                         }
-                        target = new TagValue()
+                        target = new Documents.ListProperty
                         {
                             ListPropertyId = listPropertyId,
                             Value = value.Trim()
                         };
                         ctx.Values.Add(target);
                     }
+                    target.Types.Add(propertyType);
                     masterDoc.Tags.Add(target);
                 }
             }
@@ -188,18 +207,20 @@ namespace Harmony
         private static void ProcessPrograms(DocumentsContext ctx, Document masterDoc, ObjectVersionWrapper sourceDoc)
         {
             masterDoc.Programs.Clear();
+            var propertyType = ctx.ValueTypes.First(x => x.Name == ListPropertyTypesNames.Program);
             foreach (var source in sourceDoc.Programs)
             {
-                var target = ctx.Values.OfType<ProgramValue>().FirstOrDefault(t => t.Value == source.Value);
+                var target = ctx.Values.FirstOrDefault(t => t.Value == source.Value);
                 if (target == null)
                 {
-                    target = new ProgramValue
+                    target = new Documents.ListProperty
                     {
                         ListPropertyId = source.Guid ?? Guid.NewGuid(),
                         Value = source.Value
                     };
                     ctx.Values.Add(target);
                 }
+                target.Types.Add(propertyType);
                 masterDoc.Programs.Add(target);
             }
         }
@@ -207,18 +228,20 @@ namespace Harmony
         private static void ProcessChemicals(DocumentsContext ctx,  Document masterDoc, ObjectVersionWrapper sourceDoc)
         {
             masterDoc.Chemicals.Clear();
+            var propertyType = ctx.ValueTypes.First(x => x.Name == ListPropertyTypesNames.Chemical);
             foreach (var source in sourceDoc.Chemicals)
             {
-                var target = ctx.Values.OfType<ChemicalValue>().FirstOrDefault(t => t.Value == source.Value);
+                var target = ctx.Values.FirstOrDefault(t => t.Value == source.Value);
                 if (target == null)
                 {
-                    target = new ChemicalValue
+                    target = new Documents.ListProperty
                     {
                         ListPropertyId = source.Guid ?? Guid.NewGuid(),
                         Value = source.Value
                     };
                     ctx.Values.Add(target);
                 }
+                target.Types.Add(propertyType);
                 masterDoc.Chemicals.Add(target);
             }
         }
@@ -226,18 +249,20 @@ namespace Harmony
         private static void ProcessMeetings(DocumentsContext ctx, Document masterDoc, ObjectVersionWrapper sourceDoc)
         {
             masterDoc.Meetings.Clear();
+            var propertyType = ctx.ValueTypes.First(x => x.Name == ListPropertyTypesNames.Meeting);
             foreach (var source in sourceDoc.Meetings)
             {
-                var target = ctx.Values.OfType<MeetingValue>().FirstOrDefault(t => t.Value == source.Value);
+                var target = ctx.Values.FirstOrDefault(t => t.Value == source.Value);
                 if (target == null)
                 {
-                    target = new MeetingValue
+                    target = new Documents.ListProperty
                     {
                         ListPropertyId = source.Guid ?? Guid.NewGuid(),
                         Value = source.Value
                     };
                     ctx.Values.Add(target);
                 }
+                target.Types.Add(propertyType);
                 masterDoc.Meetings.Add(target);
             }
         }
@@ -245,18 +270,20 @@ namespace Harmony
         private static void ProcessMeetingTypes(DocumentsContext ctx, Document masterDoc, ObjectVersionWrapper sourceDoc)
         {
             masterDoc.MeetingsTypes.Clear();
+            var propertyType = ctx.ValueTypes.First(x => x.Name == ListPropertyTypesNames.MeetingType);
             foreach (var source in sourceDoc.MeetingsTypes)
             {
-                var target = ctx.Values.OfType<MeetingTypeValue>().FirstOrDefault(t => t.Value == source.Value);
+                var target = ctx.Values.FirstOrDefault(t => t.Value == source.Value);
                 if (target == null)
                 {
-                    target = new MeetingTypeValue
+                    target = new Documents.ListProperty
                     {
                         ListPropertyId = source.Guid ?? Guid.NewGuid(),
                         Value = source.Value
                     };
                     ctx.Values.Add(target);
                 }
+                target.Types.Add(propertyType);
                 masterDoc.MeetingsTypes.Add(target);
             }
         }
@@ -315,6 +342,7 @@ namespace Harmony
                 {
                     trans.Rollback();
                     ClassLogger.Error($"Delete document {ex.Message}");
+                    throw;
                 }
             }
         }
@@ -429,7 +457,7 @@ namespace Harmony
             targetFile.ThumbnailUrl = thumbnailsUrlPattern.Replace("{vault}", sourceDoc.VaultName)
                 .Replace("{file}", $"{targetFile.Name}.{targetFile.Extension}");
 
-            var status = true;
+
             using (var trans = ctx.Database.BeginTransaction())
             {
                 try
@@ -439,13 +467,14 @@ namespace Harmony
                 }
                 catch (Exception ex)
                 {
-                    status = false;
+
                     trans.Rollback();
                     ClassLogger.Error(ex);
+                    throw;
                 }
             }
 
-            return status ? targetDoc : null;
+            return targetDoc;
         }
     }
 }

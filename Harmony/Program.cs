@@ -10,7 +10,7 @@ namespace Harmony
 {
     internal class Program
     {
-        private static Logger _logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
             Run();
@@ -22,7 +22,7 @@ namespace Harmony
         {
             var config = new AppJsonConfiguration();
             var secret = new PrivateJsonConfiguration();
-            _logger.Info($"Harmony version {config.AppVersion}");
+            Logger.Info($"Harmony version {config.AppVersion}");
             ProcessVaults.Run(secret.MFiles.ServerName, secret.MFiles.UserName, secret.MFiles.Password,
                 config.Vaults.Select(v => v.Name).ToArray(), config.View, config.StartDate,
                 config.Vaults.Where(v => v.Crm !=null).ToDictionary(vault => vault.Name, vault => from p in vault.Crm select new PropertyListType(vault.Name, p.Type, p.Property)),

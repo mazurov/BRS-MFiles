@@ -1,0 +1,4 @@
+SELECT ListProperties.ListPropertyId as id, 'meeting' as entityType, ListProperties.Url as refURI 
+FROM ListProperties INNER JOIN ListPropertyTypeListProperties ON ListProperties.ListPropertyId = ListPropertyTypeListProperties.ListProperty_ListPropertyId
+INNER JOIN ListPropertyTypes ON  ListPropertyTypeListProperties.ListPropertyType_ListPropertyTypeId = ListPropertyTypes.ListPropertyTypeId
+WHERE ListPropertyTypes.Name='meeting' AND  ListProperties.Url IS NOT NULL

@@ -70,6 +70,8 @@ namespace MFilesLib
         public string Language => GetStringValue(VaultWrapper.LanguageKey);
         public string Player => GetStringValue(VaultWrapper.PlayerKey);
         public string Author => GetStringValue(VaultWrapper.AuthorKeys);
+        public string CorporateAuthor => GetStringValue(VaultWrapper.CorporateAuthorKeys);
+
         public string Copyright => GetStringValue(VaultWrapper.CopyrightKey);
         public string Country => GetStringValue(VaultWrapper.PlayerKey);
 
