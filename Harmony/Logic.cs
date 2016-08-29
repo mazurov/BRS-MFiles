@@ -306,11 +306,11 @@ namespace Harmony
             {
                 return;
             }
-            var doc = targetDocument as MFilesDocument;
+            var doc = targetDocument;
             Debug.Assert(doc != null);
             if (doc.Title != null)
             {
-                ClassLogger.Warn($"Delete document '{doc.Title.Value}'");
+                ClassLogger.Info($"Delete document '{doc.Title.Value}'");
             }
             else
             {
@@ -347,11 +347,11 @@ namespace Harmony
             }
         }
 
-        public static void DeleteNotInList(DocumentsContext ctx, ICollection<Guid> guids)
+        public static void DeleteNotInList(DocumentsContext ctx, IDictionary<Guid, bool> guids)
         {
             ClassLogger.Info("Find documents for removing...");
             //ctx.Database.CommandTimeout = 600;
-            var delGuids = (from mfdoc in ctx.MFilesDocuments select mfdoc.Guid).ToList().Except(guids);
+            var delGuids = (from mfdoc in ctx.MFilesDocuments select mfdoc.Guid).ToList().Except(guids.Keys);
             var toDelete =
                 (from mfdoc in ctx.MFilesDocuments where delGuids.Contains(mfdoc.Guid) select mfdoc).ToList();
             //ctx.Database.CommandTimeout = 60;

@@ -48,5 +48,7 @@ namespace Harmony
 
         public bool DeleteNotProcessed { get; set; }
 
+        public int ServiceInterval { get; set; }
+
     }
 }

@@ -82,19 +82,18 @@ namespace MFilesLib
             }
             catch (COMException ex)
             {
-                ClassLogger.Error($"Could not connecto to M-Files server {ex.Message}");
+                ClassLogger.Error(ex, $"Could not connect to M-Files server");
                 return;
             }
             if (result != MFServerConnection.MFServerConnectionAuthenticated)
             {
-                ClassLogger.Error("Could not connecto to M-Files server");
+                ClassLogger.Error("Could not connect to M-Files server");
                 return;
             }
 
             var topContext = processor.CreateContext();
 
-            ClassLogger.Info($"Hello from Run {serverName}");
-
+ 
             var vaultsOnServer = _mfilesServer.GetVaults();
 
             IList<Tuple<string, Vault, IView>> data = new List<Tuple<string, Vault, IView>>();
@@ -123,8 +122,6 @@ namespace MFilesLib
 
                     foreach (var listProperty in listProperties[vaultName])
                     {
-                        var listId = vault.PropertyDefOperations.GetPropertyDefs();
-                        ClassLogger.Info($"Property id of {listProperty.PropertyName}={listId}");
                         var def =
                             vault.PropertyDefOperations.GetPropertyDefs()
                                 .Cast<PropertyDef>()
@@ -178,6 +175,7 @@ namespace MFilesLib
             {
                 task.Wait();
             }
+            processor.AfterProcessing();
         }
     }
 }

@@ -9,6 +9,7 @@ namespace MFilesLib
     public interface IProcessor
     {
         IProcessorContext CreateContext();
+        void AfterProcessing();
     }
     public interface IProcessorContext
     {

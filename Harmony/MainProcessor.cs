@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Data;
 using System.Linq;
 using Documents;
@@ -38,21 +39,18 @@ namespace Harmony
 
             _ctx.Database.Connection.Open();
 
-            ClassLogger.Info($"Connection string {_ctx.Database.Connection.ConnectionString}");
-
+ 
             if (_ctx.Database.Connection.State != ConnectionState.Open)
             {
                 ClassLogger.Error("Could not connect to database");
-                return;
             }
-            ClassLogger.Info("Connection open");
         }
 
 
         public void ProcessObject(ObjectVersionWrapper obj)
         {
-            ClassLogger.Info($"Process {obj.Title} from {obj.VaultName} with UN-Number {obj.UnNumber}");
-            _parent.ProcessedMFilesGuids.Add(obj.Guid);
+            ClassLogger.Trace($"Process {obj.Title} from {obj.VaultName} with UN-Number {obj.UnNumber}");
+            _parent.ProcessedMFilesGuids[obj.Guid] = true;
             var doc = Logic.FindDocument(_ctx, obj.Guid);
             var master = Logic.FindMaster(_ctx, string.IsNullOrEmpty(obj.UnNumber) ? obj.Name : obj.UnNumber);
             var masterByGuid = Logic.FindMasterById(_ctx, obj.Guid);
@@ -277,6 +275,7 @@ namespace Harmony
 
     internal class MainProcessor : IProcessor
     {
+        private static readonly Logger ClassLogger = LogManager.GetCurrentClassLogger();
         private readonly DocumentsContext _ctx;
 
         public MainProcessor(string connectionString, IDictionary<string, VaultDetails> vaultDetails,
@@ -294,6 +293,8 @@ namespace Harmony
 
             _ctx = new DocumentsContext(connectionString);
             _ctx.Database.CreateIfNotExists();
+            ClassLogger.Info($"Connection string {_ctx.Database.Connection.ConnectionString}");
+
 
             foreach (var type in ListPropertyTypesNames.Names)
             {
@@ -315,7 +316,7 @@ namespace Harmony
 
         public string ConnectionString { get; }
 
-        public List<Guid> ProcessedMFilesGuids { get; set; } = new List<Guid>();
+        public ConcurrentDictionary<Guid, bool> ProcessedMFilesGuids { get; set; } = new ConcurrentDictionary<Guid, bool>();
 
         public IProcessorContext CreateContext()
         {
