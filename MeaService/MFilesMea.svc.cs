@@ -35,5 +35,13 @@ namespace MeaService
             System.Diagnostics.Debug.WriteLine(args.Exception.Message);
             base.HandleException(args);
         }
+
+        protected override DocumentsContext CreateDataSource()
+        {
+            var result = base.CreateDataSource();
+            result.Database.CommandTimeout = 60;
+            // result.Database.Log = message => System.Diagnostics.Debug.Write(message);
+            return result;
+        }
     }
 }

@@ -55,7 +55,7 @@ namespace Harmony
             var master = Logic.FindMaster(_ctx, string.IsNullOrEmpty(obj.UnNumber) ? obj.Name : obj.UnNumber);
             var masterByGuid = Logic.FindMasterById(_ctx, obj.Guid);
 
-            if (doc != null && (master == null || master.Guid != masterByGuid.Guid)) // Changed UnNumber
+            if (doc != null && (master == null || masterByGuid == null || master.Guid != masterByGuid.Guid)) // Changed UnNumber
             {
                 Logic.Delete(_ctx, doc);
                 doc = null;
@@ -293,7 +293,8 @@ namespace Harmony
 
             _ctx = new DocumentsContext(connectionString);
             _ctx.Database.CreateIfNotExists();
-            ClassLogger.Info($"Connection string {_ctx.Database.Connection.ConnectionString}");
+            var connectionForDisplay = _ctx.Database.Connection.ConnectionString.Split(';')[0];
+            ClassLogger.Info($"Connection string {connectionForDisplay}");
 
 
             foreach (var type in ListPropertyTypesNames.Names)

@@ -393,13 +393,22 @@ namespace Harmony
             var doc = masterDoc.Document;
             Debug.Assert(doc != null);
 
-            var languageCode = CultureUtils.GetLangTwoLetterCode(sourceDoc.Language);
+            string languageCode;
+
+            // TODO: should be in configuration or don't use CultureUtils
+            // or we need to update language in M-Files
+            if (sourceDoc.Language == "Portugese")
+            {
+                languageCode = "pt";
+            }
+            else { 
+                languageCode = CultureUtils.GetLangTwoLetterCode(sourceDoc.Language);
+            }
 
             if (languageCode == null)
             {
-                ClassLogger.Warn("Could not find language code for  {0} (Document {1})",
-                    sourceDoc.Language,
-                    sourceDoc.UnNumber);
+                ClassLogger.Warn(
+                    $"Could not find language code for  {sourceDoc.Language} (Document {sourceDoc.UnNumber})");
                 return null;
             }
 
@@ -450,9 +459,9 @@ namespace Harmony
             targetFile.Language = languageCode;
             targetFile.LanguageFull = sourceDoc.Language;
             targetFile.Name = file.Name;
-            targetFile.Extension = file.Extension;
+            targetFile.Extension = file.Extension.ToLower();
             targetFile.Size = file.Size;
-            targetFile.MimeType = Mime.Lookup(file.Name + "." + file.Extension);
+            targetFile.MimeType = Mime.Lookup(file.Name + "." + file.Extension.ToLower());
             targetFile.Url = file.GetUrl(repositoryUrl);
             targetFile.ThumbnailUrl = thumbnailsUrlPattern.Replace("{vault}", sourceDoc.VaultName)
                 .Replace("{file}", $"{targetFile.Name}.{targetFile.Extension}");

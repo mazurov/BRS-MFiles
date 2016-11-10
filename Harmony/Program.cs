@@ -2,12 +2,14 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Timers;
 using Essential.Diagnostics;
 using MFilesLib;
 using NLog;
 using TreatiesService;
 using Topshelf;
+using Timer = System.Timers.Timer;
 
 namespace Harmony
 {
@@ -20,8 +22,8 @@ namespace Harmony
             _timer = new Timer
             {
                 AutoReset = true,
-                Enabled = false
-                
+                Enabled = false,
+                Interval = 5000,
             };
             _timer.Elapsed += ProcessOnTimer;
         }
@@ -34,7 +36,7 @@ namespace Harmony
         public void Start()
         {
             Logger.Info("Start service");
-            Run();
+            _timer.Enabled = true;
 
         }
         public void Stop()

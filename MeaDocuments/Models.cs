@@ -42,6 +42,9 @@ namespace MeaDocuments
                     m.MapLeftKey("documentId");
                     m.MapRightKey("keywordId");
                 });
+
+ 
+
             modelBuilder.Entity<Document>().HasMany(d => d.tags).WithMany(t => t.documents).
                 Map(m =>
                 {
@@ -63,6 +66,7 @@ namespace MeaDocuments
     [Table("mea_Documents")]
     public class Document
     {
+        
         [Key]
         public string id { get; set; }
         public string schemaVersion { get; set; }
@@ -128,6 +132,7 @@ namespace MeaDocuments
         public virtual ICollection<Document> documents { get; set; }
     }
 
+
     [Table("mea_Tags")]
     public class Tag
     {
@@ -190,23 +195,28 @@ namespace MeaDocuments
         [Key]
         public string id { get; set; }
 
-        [Required]
-        public string language { get; set; }
-
-        [Required]
-        public string name { get; set; }
-
-        [Required]
-        public string extension { get; set; }
 
         [Required]
         public string url { get; set; }
 
         [Required]
-        public string mimetype { get; set; }
+        public string content { get; set; }
 
         [Required]
-        public long size { get; set; }
+        public string mimeType { get; set; }
+
+        [Required]
+        public string language { get; set; }
+
+        [Required]
+        public string filename { get; set; }
+
+        [Required]
+        public string brsExtension { get; set; }
+
+
+        [Required]
+        public long brsSize { get; set; }
 
         public string documentId { get; set; }
 

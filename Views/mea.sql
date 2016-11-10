@@ -51,8 +51,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE VIEW [dbo].[mea_Files]
 WITH SCHEMABINDING
-	AS SELECT CONVERT(nvarchar(36), Files.FileId) as id, CONVERT(nvarchar(36), Files.Document_DocumentId) as documentId, Files.Name as name, Files.Extension as extension,
-	Files.MimeType as mimeType, Files.Size as size, Files.Url as url, Files.Language as language FROM  dbo.Files;
+	AS SELECT CONVERT(nvarchar(36), Files.FileId) as id, CONVERT(nvarchar(36), Files.Document_DocumentId) as documentId, Files.Url as url, NULL as content, Files.MimeType as mimeType, Files.Language as language, CONCAT(Files.Name, '.', Files.Extension) as filename, Files.Extension as brsExtension,
+	Files.Size as brsSize FROM  dbo.Files;
 
 
 GO
