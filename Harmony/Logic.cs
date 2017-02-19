@@ -440,7 +440,7 @@ namespace Harmony
                 descirpiton.Language = languageCode;
                 descirpiton.LanguageFull = sourceDoc.Language;
                 descirpiton.MFilesDocument = targetDoc;
-                descirpiton.Value = sourceDoc.Title;
+                descirpiton.Value = sourceDoc.Description;
             }
 
 

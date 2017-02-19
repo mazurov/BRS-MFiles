@@ -57,6 +57,7 @@ namespace MFilesLib
 
         public static readonly string[] TermKeys =
         {
+            "Term-Topic",
             "Term-Topics",
             "Term-ScientificTechnicalPublications"
         };

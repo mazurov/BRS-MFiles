@@ -1,19 +1,19 @@
 ﻿{
-  "AppVersion": "2.1",
+  "AppVersion": "2.2",
   "View": "Web service",
-  "StartDate": "2008-08-24",
+  "StartDate": "2016-11-20",
   "ServiceInterval":  30,   
   "TreatiesServiceUrl": "http://informea.pops.int/CountryProfiles/brsTreatyProfile.svc",
   "ConferencesServiceUrl": "http://informea.pops.int/Meetings/Conferences.svc",
   "ThumbnailsUrlPattern": "http://informea.pops.int/mfthumbs/thumbnail.new?vault={vault}&file={file}",
   "BrsTermsUrlPattern": "http://www.brsmeas.org/terms/{term}",
   "LeoTermsUrlPattern": "http://leo.informea.org/terms/{term}",  
-  "DeleteNotProcessed": true,
+  "DeleteNotProcessed": false,
   "Vaults": [
     {
       "Name": "Basel",
       "Url": "http://www.basel.int/Portals/4/download.aspx?d=",
-      "Enabled": false,
+      "Enabled": true,
       "Crm": [
         {
           "Type": "meeting",
@@ -48,12 +48,12 @@
       "Name": "Stockholm Production",
       "NameInDb": "stockholm",
       "Url": "http://chm.pops.int/Portals/0/download.aspx?d=",
-      "Enabled": false
+      "Enabled": true
     },
     {
       "Name": "Intranet",
       "NameInDb": "brs",
-      "Enabled": true,
+      "Enabled": false,
       "Url": ""
     }
 
