@@ -1,9 +1,9 @@
 ﻿{
-  "AppVersion": "2.2",
+  "AppVersion": "2.3",
   "View": "Web service",
-  "StartDate": "2016-11-20",
+  "StartDate": "2017-09-20",
   "ServiceInterval":  30,   
-  "TreatiesServiceUrl": "http://informea.pops.int/CountryProfiles/brsTreatyProfile.svc",
+  "TreatiesServiceUrl": "http://informea.pops.int/Ratifications2/Countries.svc",
   "ConferencesServiceUrl": "http://informea.pops.int/Meetings/Conferences.svc",
   "ThumbnailsUrlPattern": "http://informea.pops.int/mfthumbs/thumbnail.new?vault={vault}&file={file}",
   "BrsTermsUrlPattern": "http://www.brsmeas.org/terms/{term}",

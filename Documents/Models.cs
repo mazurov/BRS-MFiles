@@ -11,12 +11,15 @@ namespace Documents
     {
         public DocumentsContext(string connectionString) : base(connectionString)
         {
+            // TODO(amazurov): workaround if need CreateDatabaseIfItsNotExists 
+            Database.SetInitializer<DocumentsContext>(null);
         }
 
 
         public DocumentsContext() : base("DocumentsContext")
         {
             
+
         }
 
         public DbSet<Document> Documents { get; set; }

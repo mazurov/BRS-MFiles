@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="8d45a772-9506-40e0-af7d-0498e13b13d8" xmlns="urn:schemas-microsoft-com:xml-dataservicemap">
+  <MetadataSources>
+    <MetadataSource Address="http://informea.pops.int/Ratifications2/Countries.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.edmx" MetadataType="Edmx" ID="e0c35971-3dd2-4986-b270-18c764a95d82" SourceId="1" SourceUrl="http://informea.pops.int/Ratifications2/Countries.svc" />
+  </Metadata>
+  <Extensions />
+  <Parameters>
+    <Parameter Name="NuGetPackageSource" Value="C:\Program Files (x86)\Microsoft WCF Data Services\5.6.4\bin\NuGet\" />
+    <Parameter Name="NuGetPackageId" Value="Microsoft.Data.Services.Client" />
+    <Parameter Name="UseDataServiceCollection" Value="true" />
+    <Parameter Name="Version" Value="3.0" />
+  </Parameters>
+</ReferenceGroup>

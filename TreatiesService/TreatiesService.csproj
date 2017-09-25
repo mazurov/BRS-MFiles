@@ -67,6 +67,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.datasvcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\Countries\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.datasvcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\Treaties\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -80,6 +85,9 @@
     <ServiceReferenceMetadataStorage Include="Service References\Conferences\">
       <Type>datasvcmap</Type>
     </ServiceReferenceMetadataStorage>
+    <ServiceReferenceMetadataStorage Include="Service References\Countries\">
+      <Type>datasvcmap</Type>
+    </ServiceReferenceMetadataStorage>
     <ServiceReferenceMetadataStorage Include="Service References\Treaties\">
       <Type>datasvcmap</Type>
     </ServiceReferenceMetadataStorage>
@@ -87,6 +95,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Service References\Conferences\service.edmx" />
+    <None Include="Service References\Countries\service.edmx" />
     <None Include="Service References\Treaties\service.edmx" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +106,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\Conferences\Reference.datasvcmap">
+      <Generator>DataServicesCoreClientGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Countries\Reference.datasvcmap">
       <Generator>DataServicesCoreClientGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

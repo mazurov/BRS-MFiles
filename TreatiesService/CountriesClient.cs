@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using TreatiesService.Treaties;
+using TreatiesService.Countries;
 
 namespace TreatiesService
 {
     public class CountriesClient
     {
-        private readonly TreatyProfileContext _ctx;
+        private readonly PlayersEntities _ctx;
         private Dictionary<string, string> _isoCodes2;
 
         public CountriesClient(string serviceUri)
         {
-            _ctx = new TreatyProfileContext(new Uri(serviceUri));
+            _ctx = new PlayersEntities(new Uri(serviceUri));
         }
 
         private Dictionary<string, string> IsoCodes2
@@ -21,19 +22,11 @@ namespace TreatiesService
                 if (_isoCodes2 == null)
                 {
                     _isoCodes2 = new Dictionary<string, string>();
-                    foreach (var country in _ctx.countryNames)
+                    foreach (var country in _ctx.Countries)
                     {
-                        if (!string.IsNullOrEmpty(country.NameEn) && !_isoCodes2.ContainsKey(country.NameEn.ToLower()))
+                        if (!string.IsNullOrEmpty(country.countryNameEn) && !_isoCodes2.ContainsKey(country.countryNameEn.ToLower()))
                         {
-                            _isoCodes2.Add(country.NameEn.ToLower(), country.IsoCode2d);
-                        }
-                        if (!string.IsNullOrEmpty(country.NameFr) && !_isoCodes2.ContainsKey(country.NameFr.ToLower()))
-                        {
-                            _isoCodes2.Add(country.NameFr.ToLower(), country.IsoCode2d);
-                        }
-                        if (!string.IsNullOrEmpty(country.NameEs) && !_isoCodes2.ContainsKey(country.NameEs.ToLower()))
-                        {
-                            _isoCodes2.Add(country.NameEs.ToLower(), country.IsoCode2d);
+                            _isoCodes2.Add(country.countryNameEn.ToLower(), country.countryCode2);
                         }
                     }
                 }

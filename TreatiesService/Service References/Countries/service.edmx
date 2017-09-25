@@ -1,0 +1,27 @@
+﻿<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <edmx:DataServices m:DataServiceVersion="1.0" m:MaxDataServiceVersion="3.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+    <Schema Namespace="crm" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <EntityType Name="Countries">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.Guid" Nullable="false" />
+        <Property Name="countryCode2" Type="Edm.String" MaxLength="2" FixedLength="false" Unicode="true" />
+        <Property Name="countryCode3" Type="Edm.String" MaxLength="3" FixedLength="false" Unicode="true" />
+        <Property Name="countryNameEn" Type="Edm.String" MaxLength="250" FixedLength="false" Unicode="true" />
+        <Property Name="countryNameOfficialEn" Type="Edm.String" MaxLength="250" FixedLength="false" Unicode="true" />
+        <Property Name="countryRegionUn" Type="Edm.String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        <Property Name="countryRegionFAO" Type="Edm.String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        <Property Name="isDeveloping" Type="Edm.Boolean" />
+        <Property Name="isLDC" Type="Edm.Boolean" />
+        <Property Name="isSIDS" Type="Edm.Boolean" />
+        <Property Name="preferredLanguage" Type="Edm.String" MaxLength="Max" FixedLength="false" Unicode="true" />
+      </EntityType>
+    </Schema>
+    <Schema Namespace="Players" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <EntityContainer Name="PlayersEntities" m:IsDefaultEntityContainer="true" p6:LazyLoadingEnabled="true" xmlns:p6="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntitySet Name="Countries" EntityType="crm.Countries" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
