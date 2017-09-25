@@ -111,7 +111,7 @@ namespace Harmony
                     catch (Exception ex)
                     {
                         trans.Rollback();
-                        ClassLogger.Error("SQL exception "  + ex.Message);
+                        ClassLogger.Error("SQL exception "  + ex);
                         throw;
                     }
                 }
@@ -400,6 +400,9 @@ namespace Harmony
             if (sourceDoc.Language == "Portugese")
             {
                 languageCode = "pt";
+            } else if (sourceDoc.Language == "Azeri")
+            {
+                languageCode = "az";
             }
             else { 
                 languageCode = CultureUtils.GetLangTwoLetterCode(sourceDoc.Language);

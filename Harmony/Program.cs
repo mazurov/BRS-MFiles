@@ -67,7 +67,7 @@ namespace Harmony
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Service exception");
+                Logger.Error(ex, "Service exception:  " + ex);
             }
             _timer.Interval = config.ServiceInterval * 60 * 1000;
             _timer.Enabled = true;

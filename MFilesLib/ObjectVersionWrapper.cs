@@ -230,7 +230,7 @@ namespace MFilesLib
                 if (propertyDef.ValueList > 0)
                 {
                     result.AddRange(from Lookup lookup in propertyValue.Value.GetValueAsLookups()
-                                    where !String.IsNullOrWhiteSpace(lookup.DisplayValue)
+                                    where !String.IsNullOrWhiteSpace(lookup.DisplayValue) && !lookup.Deleted
                                     group lookup by lookup.DisplayValue into g
                                     select new ListProperty(g.First()));
                 }
