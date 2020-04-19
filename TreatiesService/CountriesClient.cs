@@ -13,6 +13,7 @@ namespace TreatiesService
         public CountriesClient(string serviceUri)
         {
             _ctx = new PlayersEntities(new Uri(serviceUri));
+            _ctx.IgnoreMissingProperties = true;
         }
 
         private Dictionary<string, string> IsoCodes2

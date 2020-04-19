@@ -17,9 +17,10 @@ namespace TreatiesService
         {
             ServiceUri = serviceUri;
             _ctx = new ConferencesEntities(new Uri(ServiceUri));
+            _ctx.IgnoreMissingProperties = true;
             _ctx.SendingRequest2 += (s, e) =>
             {
-                Trace.TraceInformation("SASHA {0} {1}", e.RequestMessage.Method, e.RequestMessage.Url);
+                Trace.TraceInformation("{0} {1}", e.RequestMessage.Method, e.RequestMessage.Url);
             };
 
         }
